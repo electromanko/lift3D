@@ -20,6 +20,20 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+protected:
+    #ifndef QT_NO_CONTEXTMENU
+        void contextMenuEvent(QContextMenuEvent *event) Q_DECL_OVERRIDE;
+    #endif // QT_NO_CONTEXTMENU
+private:
+
+    void createActions();
+    void createMenus();
+
+    QMenu *fileMenu;
+    QMenu *helpMenu;
+
+    QAction *actionQuit;
+    QAction *actionAbout;
 
 };
 
