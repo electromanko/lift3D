@@ -12,9 +12,23 @@ TARGET = lift3D
 TEMPLATE = app
 
 
-SOURCES += main.cpp\
-        mainwindow.cpp
+SOURCES += src/main.cpp\
+           src/mainwindow.cpp\
+           src/glwidget.cpp\
+           src/geometryengine.cpp \
+            src/paramwidget.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += include/mainwindow.h\
+            include/glwidget.h\
+            include/geometryengine.h \
+            include/paramwidget.h
 
-FORMS    += mainwindow.ui
+FORMS    += form/mainwindow.ui
+
+RESOURCES += \
+    res/shaders.qrc \
+    res/textures.qrc
+    res/cube.png
+
+DISTFILES +=
+

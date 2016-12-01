@@ -1,6 +1,6 @@
-#include "paramwidget.h"
+#include "include/paramwidget.h"
 
-paramwidget::paramwidget(QWidget *parent) : QWidget(parent)
+ParamWidget::ParamWidget(QWidget *parent) : QWidget(parent)
 {
 
 }

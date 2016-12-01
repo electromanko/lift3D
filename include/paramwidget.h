@@ -3,11 +3,11 @@
 
 #include <QWidget>
 
-class paramwidget : public QWidget
+class ParamWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit paramwidget(QWidget *parent = 0);
+    explicit ParamWidget(QWidget *parent = 0);
 
 signals:
 
