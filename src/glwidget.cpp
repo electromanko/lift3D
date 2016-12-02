@@ -117,19 +117,32 @@ void GlWidget::mouseReleaseEvent(QMouseEvent *e)
 void GlWidget::mouseMoveEvent (QMouseEvent *event)
 //! [13] //! [14]
 {
-    // Mouse release position - mouse press position
-    QVector2D diff = QVector2D(event->pos()) - mousePressPosition;
-    // Rotation axis is perpendicular to the mouse position difference
-    // vector
-    QVector3D n = QVector3D(diff.y(), diff.x(), 0.0).normalized();
-    // angular value relative to the length of the mouse sweep
-    qreal k = diff.length() / 5.0;
-    // Calculate new rotation axis as weighted sum
-    rotationAxis = (rotationAxis+ n*k).normalized();
-    rotation = QQuaternion::fromAxisAndAngle(rotationAxis, k) *prevRrotation;
-    update();
+    if (event->buttons()&Qt::MidButton){
+        // Mouse release position - mouse press position
+        QVector2D diff = QVector2D(event->pos()) - mousePressPosition;
+        // Rotation axis is perpendicular to the mouse position difference
+        // vector
+        QVector3D n = QVector3D(diff.y(), diff.x(), 0.0).normalized();
+        // angular value relative to the length of the mouse sweep
+        qreal k = diff.length() / 5.0;
+        // Calculate new rotation axis as weighted sum
+        rotationAxis = (rotationAxis+ n*k).normalized();
+        rotation = QQuaternion::fromAxisAndAngle(rotationAxis, k) *prevRrotation;
+        update();
 
-    qDebug() << QString("%1:%2").arg( QString::number(diff.x()), QString::number(diff.y()));
+        qDebug() << QString("%1:%2").arg( QString::number(diff.x()), QString::number(diff.y()));
+    }
+if (event->buttons()&Qt::LeftButton){
+        GLint viewport[4];
+        GLfloat winX, winY, winZ;
+        glGetIntegerv( GL_VIEWPORT, viewport );
+        winX = (float)event->pos().x();
+        winY = (float)viewport[3] - (float)event->pos().y();
+
+        glReadPixels( winX, winY, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &winZ );
+        QVector3D worldPosition = QVector3D(winX, winY, winZ).unproject(modelViewMatrix, projectionMatrix, QRect(viewport[0], viewport[1], viewport[2], viewport[3]));
+        qDebug()<< QString("%1,%2,%3").arg(winX).arg(winY).arg(winZ);
+    }
 }
 
 //! [1]
@@ -173,6 +186,8 @@ void GlWidget::initializeGL()
 
     // Use QBasicTimer because its faster than QTimer
     timer.start(12, this);
+
+
 }
 
 //! [3]
@@ -224,11 +239,11 @@ void GlWidget::resizeGL(int w, int h)
     const qreal zNear = .1, zFar = 40.0, fov = 45.0;
 
     // Reset projection
-    projection.setToIdentity();
+    projectionMatrix.setToIdentity();
 
     // Set perspective projection
 
-    projection.perspective(fov, aspectScene, zNear, zFar);
+    projectionMatrix.perspective(fov, aspectScene, zNear, zFar);
 }
 //! [5]
 
@@ -247,7 +262,7 @@ void GlWidget::paintGL()
     modelViewMatrix.rotate(rotation);
 
     // Set modelview-projection matrix
-    program.setUniformValue("mvp_matrix", projection * modelViewMatrix);
+    program.setUniformValue("mvp_matrix", projectionMatrix * modelViewMatrix);
 //! [6]
 
     // Use texture unit 0 which contains cube.png
