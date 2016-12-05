@@ -44,9 +44,12 @@
 
 #include <math.h>
 
+
+
 GlWidget::GlWidget(QWidget *parent) :
     QOpenGLWidget(parent),
     geometries(0),
+    gKernel(0),
     texture(0),
     angularSpeed(0),
     translateScene(0,0,-5.0)
@@ -60,6 +63,7 @@ GlWidget::~GlWidget()
     makeCurrent();
     delete texture;
     delete geometries;
+    delete gKernel;
     doneCurrent();
 }
 
@@ -139,9 +143,14 @@ if (event->buttons()&Qt::LeftButton){
         winX = (float)event->pos().x();
         winY = (float)viewport[3] - (float)event->pos().y();
 
-        glReadPixels( winX, winY, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &winZ );
-        QVector3D worldPosition = QVector3D(winX, winY, winZ).unproject(modelViewMatrix, projectionMatrix, QRect(viewport[0], viewport[1], viewport[2], viewport[3]));
-        qDebug()<< QString("%1,%2,%3").arg(winX).arg(winY).arg(winZ);
+        glReadPixels( winX, winY, 0, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &winZ );
+        QVector3D worldPosition0 = QVector3D(winX, winY, 0).unproject(modelViewMatrix, projectionMatrix, QRect(viewport[0], viewport[1], viewport[2], viewport[3]));
+        QVector3D worldPosition1 = QVector3D(winX, winY, 1).unproject(modelViewMatrix, projectionMatrix, QRect(viewport[0], viewport[1], viewport[2], viewport[3]));
+        //qDebug()<< QString("%1,%2,%3").arg(winX).arg(winY).arg(winZ);
+        QVector3D resultRay = worldPosition1-worldPosition0;
+        gKernel->addLine(worldPosition0,worldPosition1,QString("eee"));
+        gKernel->addLine(QVector3D(-1.5f,-1.5f,-1.5f),QVector3D(1.5f,1.5f,1.5f),QString("eee"));
+        qDebug()<< QString("%1,%2,%3").arg(resultRay.x()).arg(resultRay.y()).arg(resultRay.z());
     }
 }
 
@@ -183,6 +192,7 @@ void GlWidget::initializeGL()
 //! [2]
 
     geometries = new GeometryEngine;
+    gKernel = new GeometryKernel;
 
     // Use QBasicTimer because its faster than QTimer
     timer.start(12, this);
@@ -270,4 +280,5 @@ void GlWidget::paintGL()
 
     // Draw cube geometry
     geometries->drawCubeGeometry(&program);
+    gKernel->draw(&program);
 }

@@ -42,6 +42,7 @@
 #define GLWIDGET_H
 
 #include "geometryengine.h"
+#include <include/geometry_kernel.h>
 
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions>
@@ -82,6 +83,7 @@ private:
     QBasicTimer timer;
     QOpenGLShaderProgram program;
     GeometryEngine *geometries;
+    GeometryKernel *gKernel;
 
     QOpenGLTexture *texture;
 
