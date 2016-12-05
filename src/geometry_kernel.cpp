@@ -97,7 +97,9 @@ void GeometryKernel::draw(QOpenGLShaderProgram *program)
     for (i = elementsList.begin(); i != elementsList.end(); ++i){
         Element e = *i;
         glDrawArrays(e.type, vertOffset, e.verticles->length());
+        //qDebug()<<glGetError();
         vertOffset+=e.verticles->length();
+
     }
 }
 

@@ -19,6 +19,6 @@ void main()
 
     // Pass texture coordinate to fragment shader
     // Value will be automatically interpolated to fragments inside polygon faces
-    //v_texcoord = a_texcoord;
+    v_texcoord = a_texcoord;
 }
 //! [0]

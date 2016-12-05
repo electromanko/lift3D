@@ -89,7 +89,7 @@ void GlWidget::wheelEvent(QWheelEvent *event){
 
     // Request an update
     update();
-    qDebug() << QString(event->delta());
+    qDebug() << QString("%1").arg(translateScene.z());
 }
 
 void GlWidget::mouseReleaseEvent(QMouseEvent *e)
@@ -141,15 +141,18 @@ if (event->buttons()&Qt::LeftButton){
         GLfloat winX, winY, winZ;
         glGetIntegerv( GL_VIEWPORT, viewport );
         winX = (float)event->pos().x();
-        winY = (float)viewport[3] - (float)event->pos().y();
+        //winY = (float)viewport[3] - (float)event->pos().y();
+        winY = this->height() - (float)event->pos().y();
 
-        glReadPixels( winX, winY, 0, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &winZ );
-        QVector3D worldPosition0 = QVector3D(winX, winY, 0).unproject(modelViewMatrix, projectionMatrix, QRect(viewport[0], viewport[1], viewport[2], viewport[3]));
-        QVector3D worldPosition1 = QVector3D(winX, winY, 1).unproject(modelViewMatrix, projectionMatrix, QRect(viewport[0], viewport[1], viewport[2], viewport[3]));
-        //qDebug()<< QString("%1,%2,%3").arg(winX).arg(winY).arg(winZ);
+        //glReadPixels( winX, winY, 0, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &winZ );
+        //QVector3D worldPosition0 = QVector3D(winX, winY, 0).unproject(modelViewMatrix, projectionMatrix, QRect(viewport[0], viewport[1], viewport[2], viewport[3]));
+        //QVector3D worldPosition1 = QVector3D(winX, winY, 1).unproject(modelViewMatrix, projectionMatrix, QRect(viewport[0], viewport[1], viewport[2], viewport[3]));
+        QVector3D worldPosition0 = QVector3D(winX, winY, 0).unproject(modelViewMatrix, projectionMatrix, this->rect());
+        QVector3D worldPosition1 = QVector3D(winX, winY, 1).unproject(modelViewMatrix, projectionMatrix, this->rect());
+        qDebug()<< QString("%1,%2,%3").arg(winX).arg(winY).arg(winZ);
         QVector3D resultRay = worldPosition1-worldPosition0;
         gKernel->addLine(worldPosition0,worldPosition1,QString("eee"));
-        gKernel->addLine(QVector3D(-1.5f,-1.5f,-1.5f),QVector3D(1.5f,1.5f,1.5f),QString("eee"));
+        //gKernel->addLine(QVector3D(-1.5f,-1.5f,-1.5f),QVector3D(1.5f,1.5f,1.5f),QString("eee"));
         qDebug()<< QString("%1,%2,%3").arg(resultRay.x()).arg(resultRay.y()).arg(resultRay.z());
     }
 }
@@ -246,7 +249,7 @@ void GlWidget::resizeGL(int w, int h)
     aspectScene = qreal(w) / qreal(h ? h : 1);
 
     // Set near plane to 3.0, far plane to 7.0, field of view 45 degrees
-    const qreal zNear = .1, zFar = 40.0, fov = 45.0;
+    const qreal zNear = 1.0, zFar = 40.0, fov = 45.0;
 
     // Reset projection
     projectionMatrix.setToIdentity();
@@ -281,4 +284,5 @@ void GlWidget::paintGL()
     // Draw cube geometry
     geometries->drawCubeGeometry(&program);
     gKernel->draw(&program);
+
 }
