@@ -1,6 +1,8 @@
 #include "include/geometry_kernel.h"
 #include <QVector2D>
 #include <QVector3D>
+#include <QtMath>
+#include <math.h>
 
 struct VertexData
 {
@@ -33,6 +35,59 @@ int GeometryKernel::addLine(const QVector3D &p0, const QVector3D &p1, const QStr
     this->elementsList.append(Element(0,Element::Type::Line, vert, name));
     updateBuffer();
     return 0;
+}
+
+int GeometryKernel::addTriangle(const QVector3D &p0, const QVector3D &p1, const QVector3D &p2, const QString &name)
+{
+    QVector<QVector3D> *vert= new QVector<QVector3D>();
+    vert->append(QVector3D(p0));
+    vert->append(QVector3D(p1));
+    vert->append(QVector3D(p2));
+    this->elementsList.append(Element(0,Element::Type::Triangle, vert, name));
+    updateBuffer();
+    return 0;
+}
+
+QVector3D GeometryKernel::intersect(const QVector3D &x, const QVector3D &y, const QVector3D &a, const QVector3D &b, const QVector3D &c, int *accessory)
+{
+    QVector3D n = QVector3D::normal(a,b,c);
+    QVector3D v = a-x;
+    float d = QVector3D::dotProduct(n,v);
+    QVector3D w = y-x;
+    float e = QVector3D::dotProduct(n,w);
+    if (e!=0){
+        *accessory=0;
+        return x+(d/e)*w;
+    }
+    else if(d==0){
+        *accessory=1;
+        return x;
+    }
+    else {
+        *accessory=-1;
+        return QVector3D(0,0,0);
+    }
+}
+
+float GeometryKernel::angleBetween(QVector3D &x, QVector3D &y)
+{
+    x.normalize();
+    y.normalize();
+    return qAcos(QVector3D::dotProduct(x,y));
+}
+
+bool GeometryKernel::insidePolygon(const QVector3D &vIntersection, QVector3D poly[], long verticeCount)
+{
+    const float MATCH_FACTOR = 0.99;
+    float angle = 0.0;
+    QVector3D vA, vB;
+      for (int i = 0; i < verticeCount; i++) {
+        vA = poly[i] - vIntersection;
+        vB = poly[(i + 1) % verticeCount] - vIntersection;
+        angle += GeometryKernel::angleBetween(vA, vB);
+      }
+      if (angle >= (MATCH_FACTOR * (2.0 * M_PI)) ) return true;
+      return false;
 }
 
 void GeometryKernel::updateBuffer()

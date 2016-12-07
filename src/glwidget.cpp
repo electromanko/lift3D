@@ -149,11 +149,20 @@ if (event->buttons()&Qt::LeftButton){
         //QVector3D worldPosition1 = QVector3D(winX, winY, 1).unproject(modelViewMatrix, projectionMatrix, QRect(viewport[0], viewport[1], viewport[2], viewport[3]));
         QVector3D worldPosition0 = QVector3D(winX, winY, 0).unproject(modelViewMatrix, projectionMatrix, this->rect());
         QVector3D worldPosition1 = QVector3D(winX, winY, 1).unproject(modelViewMatrix, projectionMatrix, this->rect());
-        qDebug()<< QString("%1,%2,%3").arg(winX).arg(winY).arg(winZ);
-        QVector3D resultRay = worldPosition1-worldPosition0;
-        gKernel->addLine(worldPosition0,worldPosition1,QString("eee"));
+        //qDebug()<< QString("%1,%2,%3").arg(winX).arg(winY).arg(winZ);
+        //QVector3D resultRay = worldPosition1-worldPosition0;
+
+        //gKernel->addLine(worldPosition0,worldPosition1,QString("eee"));
+
         //gKernel->addLine(QVector3D(-1.5f,-1.5f,-1.5f),QVector3D(1.5f,1.5f,1.5f),QString("eee"));
-        qDebug()<< QString("%1,%2,%3").arg(resultRay.x()).arg(resultRay.y()).arg(resultRay.z());
+        int acc;
+        QVector3D itsect = GeometryKernel::intersect(worldPosition0, worldPosition1, QVector3D(-1.5f,-1.5f,-1.5f),QVector3D(1.5f,1.5f,1.5f),QVector3D(0.0f,1.5f,0.0f), &acc);
+        qDebug()<< QString("%1,%2,%3").arg(itsect.x()).arg(itsect.y()).arg(itsect.z());
+        gKernel->addLine(worldPosition0,itsect,QString("eee"));
+        QVector3D poly[]={QVector3D(-1.5f,-1.5f,-1.5f),QVector3D(1.5f,1.5f,1.5f),QVector3D(0.0f,1.5f,0.0f)};
+        bool ip = GeometryKernel::insidePolygon(itsect, poly, 3);
+        //qDebug()<< QString("%1,%2,%3").arg(resultRay.x()).arg(resultRay.y()).arg(resultRay.z());
+        qDebug()<< QString("Inside triangle: %1").arg(ip);
     }
 }
 
@@ -200,7 +209,7 @@ void GlWidget::initializeGL()
     // Use QBasicTimer because its faster than QTimer
     timer.start(12, this);
 
-
+    gKernel->addTriangle(QVector3D(-1.5f,-1.5f,-1.5f),QVector3D(1.5f,1.5f,1.5f),QVector3D(0.0f,1.5f,0.0f),QString("eee"));
 }
 
 //! [3]
