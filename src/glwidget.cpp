@@ -44,6 +44,8 @@
 
 #include <math.h>
 
+#include <include/geometry_unit.h>
+
 
 
 GlWidget::GlWidget(QWidget *parent) :
@@ -208,7 +210,7 @@ void GlWidget::initializeGL()
 
     // Use QBasicTimer because its faster than QTimer
     timer.start(12, this);
-
+    GeometryUnitLine line;
     gKernel->addTriangle(QVector3D(-1.5f,-1.5f,-1.5f),QVector3D(1.5f,1.5f,1.5f),QVector3D(0.0f,1.5f,0.0f),QString("eee"));
 }
 

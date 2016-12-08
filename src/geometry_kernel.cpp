@@ -37,6 +37,11 @@ int GeometryKernel::addLine(const QVector3D &p0, const QVector3D &p1, const QStr
     return 0;
 }
 
+int GeometryKernel::addElement(GeometryElement &element){
+    unitList.append(element);
+    return 0;
+}
+
 int GeometryKernel::addTriangle(const QVector3D &p0, const QVector3D &p1, const QVector3D &p2, const QString &name)
 {
     QVector<QVector3D> *vert= new QVector<QVector3D>();
@@ -157,6 +162,77 @@ void GeometryKernel::draw(QOpenGLShaderProgram *program)
 
     }
 }
+
+void GeometryKernel::updateBuffer2()
+{
+    QList<GeometryElement>::iterator i;
+    int sizeVerticles=0;
+    int bufOffset=0;
+    VertexData vd;
+
+    // Transfer vertex data to VBO 0
+    arrayBuf.bind();
+    //arrayBuf.allocate(vertices, 24 * sizeof(VertexData));
+
+
+    for (i = unitList.begin(); i != unitList.end(); ++i){
+        sizeVerticles += i->getVSize();
+    }
+    arrayBuf.allocate( sizeVerticles * sizeof(VertexData));
+
+    int vsize;
+    for (i = unitList.begin(); i != unitList.end(); ++i){
+        QVector3D* vtxs = i->getVertexP();
+        vsize = i->getVSize();
+        for (int iv=0;iv<vsize;iv++){
+            vd.position = vtxs[iv];
+            vd.texCoord[0]=vd.texCoord[1]=0;
+            arrayBuf.write(bufOffset, &vd,1*sizeof(VertexData));
+            bufOffset+=sizeof(VertexData);
+        }
+    }
+    // Transfer index data to VBO 1
+    //indexBuf.bind();
+    //indexBuf.allocate(indices, 34 * sizeof(GLushort));
+}
+
+void GeometryKernel::draw2(QOpenGLShaderProgram *program)
+{
+    // Tell OpenGL which VBOs to use
+    arrayBuf.bind();
+    //indexBuf.bind();
+    int vertOffset=0;
+
+    // Offset for position
+    quintptr offset = 0;
+
+    // Tell OpenGL programmable pipeline how to locate vertex position data
+    int vertexLocation = program->attributeLocation("a_position");
+    program->enableAttributeArray(vertexLocation);
+    program->setAttributeBuffer(vertexLocation, GL_FLOAT, offset, 3, sizeof(VertexData));
+
+    // Offset for texture coordinate
+    offset += sizeof(QVector3D);
+
+    // Tell OpenGL programmable pipeline how to locate vertex texture coordinate data
+    int texcoordLocation = program->attributeLocation("a_texcoord");
+    program->enableAttributeArray(texcoordLocation);
+    program->setAttributeBuffer(texcoordLocation, GL_FLOAT, offset, 2, sizeof(VertexData));
+
+    // Draw cube geometry using indices from VBO 1
+    //glDrawElements(GL_TRIANGLE_STRIP, 34, GL_UNSIGNED_SHORT, 0);
+    QList<GeometryElement>::iterator i;
+    int vl;
+    for (i = unitList.begin(); i != unitList.end(); ++i){
+        vl=i->getVSize();
+        glDrawArrays(i->getGLMode(), vertOffset, vl);
+        //qDebug()<<glGetError();
+        vertOffset+=vl;
+
+    }
+}
+
+
 
 GeometryKernel::Element::Element(int i, GeometryKernel::Element::Type t, QVector<QVector3D> *v, const QString &n)
 {

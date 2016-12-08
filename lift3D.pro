@@ -18,14 +18,16 @@ SOURCES += src/main.cpp\
            src/geometryengine.cpp \
             src/paramwidget.cpp \
             src/geometry_kernel.cpp \
-            src/geometry_element.cpp
+            src/geometry_element.cpp \
+            src/geometry_unit.cpp
 
 HEADERS  += include/mainwindow.h\
             include/glwidget.h\
             include/geometryengine.h \
             include/paramwidget.h \
             include/geometry_kernel.h \
-            include/geometry_element.h
+            include/geometry_element.h \
+            include/geometry_unit.h
 
 FORMS    += form/mainwindow.ui
 
