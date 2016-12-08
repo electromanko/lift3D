@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -19,7 +19,8 @@ SOURCES += src/main.cpp\
             src/paramwidget.cpp \
             src/geometry_kernel.cpp \
             src/geometry_element.cpp \
-            src/geometry_unit.cpp
+            src/geometry_unit.cpp \
+    src/gnetraw.cpp
 
 HEADERS  += include/mainwindow.h\
             include/glwidget.h\
@@ -27,7 +28,8 @@ HEADERS  += include/mainwindow.h\
             include/paramwidget.h \
             include/geometry_kernel.h \
             include/geometry_element.h \
-            include/geometry_unit.h
+            include/geometry_unit.h \
+            include/gnetraw.h
 
 FORMS    += form/mainwindow.ui
 

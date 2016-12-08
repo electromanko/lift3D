@@ -17,10 +17,11 @@ MainWindow::MainWindow(QWidget *parent) :
     QPushButton *button1 = new QPushButton("One");
 
     glwidget =new GlWidget();
+    paramwidget = new ParamWidget();
     QSplitter *hSplitter = new QSplitter(centralWidget);
     hSplitter->setOrientation(Qt::Horizontal);
     hSplitter->addWidget(glwidget);
-    hSplitter->addWidget(button1);
+    hSplitter->addWidget(paramwidget);
 
     mainLayout->addWidget(hSplitter);
      //mainLayout->addWidget(glwidget);
