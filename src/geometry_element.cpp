@@ -3,7 +3,7 @@
 GeometryElement::GeometryElement()
 {
     unsigned long vs = GeometryElement::getVSize();
-    unsigned long is = GeometryElement::getVSize();
+    unsigned long is = GeometryElement::getISize();
     if (vs>0) {
         this->vertex = new QVector3D[vs];
         this->index = new int[is];
@@ -14,7 +14,7 @@ GeometryElement::GeometryElement()
 GeometryElement::~GeometryElement()
 {
     delete [] this->vertex;
-    delete [] this->index;
+    //delete [] this->index;
 }
 
 QVector3D* GeometryElement::getVertexP()

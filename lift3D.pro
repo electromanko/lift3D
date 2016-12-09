@@ -20,7 +20,9 @@ SOURCES += src/main.cpp\
             src/geometry_kernel.cpp \
             src/geometry_element.cpp \
             src/geometry_unit.cpp \
-    src/gnetraw.cpp
+    src/gnetraw.cpp \
+    src/lifter.cpp \
+    src/lift.cpp
 
 HEADERS  += include/mainwindow.h\
             include/glwidget.h\
@@ -29,7 +31,9 @@ HEADERS  += include/mainwindow.h\
             include/geometry_kernel.h \
             include/geometry_element.h \
             include/geometry_unit.h \
-            include/gnetraw.h
+            include/gnetraw.h \
+            include/lifter.h \
+            include/lift.h
 
 FORMS    += form/mainwindow.ui
 

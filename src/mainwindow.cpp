@@ -14,7 +14,6 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     centralWidget = new QWidget(this);
     QHBoxLayout *mainLayout = new QHBoxLayout();
-    QPushButton *button1 = new QPushButton("One");
 
     glwidget =new GlWidget();
     paramwidget = new ParamWidget();
