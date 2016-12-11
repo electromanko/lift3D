@@ -27,17 +27,30 @@ void Lifter::upDemand(int num)
 
 }
 
-void Lifter::downDemand(int num)
-{
-
-}
-
 void Lifter::stop(int num)
 {
 
 }
 
+bool Lifter::checkLiftList(unsigned int addr, unsigned int net, unsigned int devType)
+{
+    Lift a(0,0,0);
+    this->liftList.append(a);
+    /*foreach (Lift lift, this->liftList){
+        if (lift.addr == addr && lift.net==net && lift.devType == devType){
+
+        }
+    }
+*/
+}
+
 void Lifter::datagramReceive(GDatagram datagram)
 {
     qDebug() << "Lifter:receive:datgram="<< datagram.toQByteArray().toHex();
+    if (checkLiftList(datagram.addrFrom, datagram.netFrom, datagram.devType)){
+
+    }
+    else {
+
+    }
 }

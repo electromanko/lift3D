@@ -5,11 +5,15 @@ Lift::Lift(QObject *parent) : QObject(parent)
    saState=snState=hcState=hlState=0;
 }
 
-Lift::Lift(unsigned int selfAddr, unsigned int selfNet, QObject *parent) : QObject(parent)
+Lift::Lift(unsigned int selfAddr, unsigned int selfNet, unsigned int devType, QObject *parent) : QObject(parent)
 {
-    this->selfAddr=selfAddr;
+    this->addr=selfAddr;
     saState=Lift::STATE_ACTUAL;
-    this->selfNet=selfNet;
+    this->net=selfNet;
     snState=Lift::STATE_ACTUAL;
+    this->devType=devType;
+    dtState=Lift::STATE_ACTUAL;
+
     hcState=hlState=0;
+
 }

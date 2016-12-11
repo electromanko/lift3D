@@ -2,7 +2,7 @@
 #define LIFTER_H
 
 #include "include/gnetraw.h"
-#include "lift.h"
+#include "include/lift.h"
 
 #include <QObject>
 
@@ -28,12 +28,17 @@ public:
     void downDemand(int num);
     void stop(int num);
 
+
+
 protected:
     unsigned int selfAddr;
     unsigned int selfNet;
     unsigned int selfDevType;
-    QList<Lift> lift;
+
     GnetRaw *gnet;
+    QList<Lift> liftList;
+private:
+    bool checkLiftList(unsigned int addr, unsigned int net, unsigned int devType);
 
 signals:
     void readyToSend(GDatagram datagram);
