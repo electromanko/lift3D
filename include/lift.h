@@ -1,17 +1,23 @@
 #ifndef LIFT_H
 #define LIFT_H
 
+#include "gnetraw.h"
+
 #include <QObject>
 
 class Lift : public QObject
 {
     Q_OBJECT
 public:
-    const unsigned char  STATE_ACTUAL = (1<<0);
-    const unsigned char  STATE_UPDATE = (1<<1);
+    static const unsigned char  STATE_ACTUAL = (1<<0);
+    static const unsigned char  STATE_UPDATE = (1<<1);
 
     explicit Lift(QObject *parent =0);
     explicit Lift(unsigned int selfAddr=0,unsigned int  selfNet=0, unsigned int devType=0, QObject *parent = 0);
+    virtual ~Lift();
+
+    void headling(QVector<Gcpd> &cpd);
+
     unsigned int addr;
     unsigned char saState;
 

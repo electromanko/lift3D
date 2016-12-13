@@ -3,7 +3,9 @@
 
 #include "gnetraw.h"
 #include "lifter.h"
+#include "lifttable.h"
 
+#include <QTableView>
 #include <QPushButton>
 #include <QWidget>
 
@@ -13,6 +15,8 @@ class ParamWidget : public QWidget
 public:
     explicit ParamWidget(QWidget *parent = 0);
     virtual ~ParamWidget();
+    QTableView  *liftTableView;
+    LiftTable *liftTableModel;
     QPushButton *upButton;
     QPushButton *downButton;
     QPushButton *findButton;

@@ -17,3 +17,10 @@ Lift::Lift(unsigned int selfAddr, unsigned int selfNet, unsigned int devType, QO
     hcState=hlState=0;
 
 }
+
+Lift::~Lift()
+{
+
+}
+
+

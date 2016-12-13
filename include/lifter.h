@@ -21,24 +21,26 @@ public:
     static const unsigned char PORT_STOP=37;
     static const unsigned char PORT_PARK=38;
 
+    explicit Lifter(QObject *parent = 0);
     explicit Lifter(unsigned int selfAddr=0, unsigned int selfNet=0,unsigned int selfDevType=0, QObject *parent = 0);
     virtual ~Lifter();
     void findLifts();
     void upDemand(int num);
     void downDemand(int num);
     void stop(int num);
-
-
+    int getLiftCount();
+    Lift* getLift(int i);
 
 protected:
     unsigned int selfAddr;
     unsigned int selfNet;
     unsigned int selfDevType;
-
+    QList<Lift*> liftList;
     GnetRaw *gnet;
-    QList<Lift> liftList;
+
 private:
-    bool checkLiftList(unsigned int addr, unsigned int net, unsigned int devType);
+    int indexOfLiftList(unsigned int addr, unsigned int net, unsigned int devType);
+    void cpdProcessing(Lift *lift, QVector<Gcpd> &cpd);
 
 signals:
     void readyToSend(GDatagram datagram);
