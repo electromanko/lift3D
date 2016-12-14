@@ -5,8 +5,9 @@ Lift::Lift(QObject *parent) : QObject(parent)
    saState=snState=hcState=hlState=0;
 }
 
-Lift::Lift(unsigned int selfAddr, unsigned int selfNet, unsigned int devType, QObject *parent) : QObject(parent)
+Lift::Lift(QHostAddress ip,unsigned int selfAddr, unsigned int selfNet, unsigned int devType, QObject *parent) : QObject(parent)
 {
+    this->ip=ip;
     this->addr=selfAddr;
     saState=Lift::STATE_ACTUAL;
     this->net=selfNet;
@@ -14,7 +15,11 @@ Lift::Lift(unsigned int selfAddr, unsigned int selfNet, unsigned int devType, QO
     this->devType=devType;
     dtState=Lift::STATE_ACTUAL;
 
-    hcState=hlState=0;
+    this->heightCurrent=0;
+    this->heightLink=0;
+    this->padked=false;
+
+    pkState=hcState=hlState=0;
 
 }
 

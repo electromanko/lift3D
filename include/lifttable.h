@@ -9,6 +9,15 @@ class LiftTable : public QAbstractTableModel
     Q_OBJECT
 
 public:
+
+    static const int COL_IP=0;
+    static const int COL_GADDR=1;
+    static const int COL_GNET=2;
+    static const int COL_DEV_TYPE=3;
+    static const int COL_HCURR=4;
+    static const int COL_PARKED=5;
+    static const int COL_SIZE=6;
+
     explicit LiftTable(Lifter *lifter,QObject *parent = 0);
 
     // Header:
@@ -20,9 +29,13 @@ public:
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     bool insertRows(int position, int rows, const QModelIndex &index);
-    void update();
 private:
     Lifter *lifter;
+    int liftCount;
+
+public slots:
+    void updateRows();
+    void liftUpdate(int index);
 };
 
 #endif // LIFTTABLE_H

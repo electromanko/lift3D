@@ -13,7 +13,7 @@ public:
     static const unsigned char  STATE_UPDATE = (1<<1);
 
     explicit Lift(QObject *parent =0);
-    explicit Lift(unsigned int selfAddr=0,unsigned int  selfNet=0, unsigned int devType=0, QObject *parent = 0);
+    explicit Lift(QHostAddress ip, unsigned int selfAddr=0,unsigned int  selfNet=0, unsigned int devType=0, QObject *parent = 0);
     virtual ~Lift();
 
     void headling(QVector<Gcpd> &cpd);
@@ -32,6 +32,11 @@ public:
 
     unsigned int heightLink;
     unsigned char hlState;
+
+    QHostAddress ip;
+
+    bool padked;
+    unsigned char pkState;
 
 signals:
 

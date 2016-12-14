@@ -23,7 +23,7 @@ private:
     QUdpSocket *udpSocket;
     QVector<QHostAddress> selfAddress;
 signals:
-    received(GDatagram datagram);
+    received(QHostAddress ip, GDatagram datagram);
 public slots:
     void readPendingDatagrams();
 

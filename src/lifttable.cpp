@@ -9,6 +9,7 @@ LiftTable::LiftTable(Lifter *lifter, QObject *parent)
     : QAbstractTableModel(parent)
 {
     this->lifter=lifter;
+    this->liftCount= lifter->getLiftCount();
 }
 
 QVariant LiftTable::headerData(int section, Qt::Orientation orientation, int role) const
@@ -19,12 +20,20 @@ QVariant LiftTable::headerData(int section, Qt::Orientation orientation, int rol
         if (orientation == Qt::Horizontal) {
             switch (section)
             {
-            case 0:
+
+
+            case COL_IP:
+                return QString("IP");
+            case COL_GADDR:
                 return QString("Addr");
-            case 1:
+            case COL_GNET:
                 return QString("Net");
-            case 2:
+            case COL_DEV_TYPE:
                 return QString("DevType");
+            case COL_HCURR:
+                return QString("Hc");
+            case COL_PARKED:
+                return QString("Parked");
             }
         }
     }
@@ -37,7 +46,7 @@ int LiftTable::rowCount(const QModelIndex &parent) const
     /*if (!parent.isValid())
         return 0;*/
 
-    return lifter->getLiftCount();
+    return liftCount;
 
 }
 
@@ -47,7 +56,7 @@ int LiftTable::columnCount(const QModelIndex &parent) const
         return 0;
 
     return lifter->getLiftCount();*/
-    return 3;
+    return COL_SIZE;
 }
 
 QVariant LiftTable::data(const QModelIndex &index, int role) const
@@ -66,9 +75,13 @@ QVariant LiftTable::data(const QModelIndex &index, int role) const
         case Qt::DisplayRole:
 
             if (lift!= NULL){
-                if (col == 0) return QString("%1").arg(lift->addr);
-                if (col == 1) return QString("%1").arg(lift->net);
-                if (col == 2) return QString("%1").arg(lift->devType);
+
+                if (col == COL_IP) return QString("%1").arg(lift->ip.toString());
+                if (col == COL_GADDR) return QString("%1").arg(lift->addr);
+                if (col == COL_GNET) return QString("%1").arg(lift->net);
+                if (col == COL_DEV_TYPE) return QString("%1").arg(lift->devType);
+                if (col == COL_HCURR) return QString("%1").arg(lift->heightCurrent);
+                if (col == COL_PARKED) return  lift->padked? QString("Parked"):QString("None");
             }
             break;
         case Qt::FontRole:
@@ -78,6 +91,7 @@ QVariant LiftTable::data(const QModelIndex &index, int role) const
                 boldFont.setBold(true);
                 return boldFont;
             }*/
+
             break;
         case Qt::BackgroundRole:
 
@@ -86,6 +100,11 @@ QVariant LiftTable::data(const QModelIndex &index, int role) const
                 QBrush redBackground(Qt::red);
                 return redBackground;
             }*/
+
+            if ((col==COL_HCURR && !(lift->hcState&Lift::STATE_ACTUAL)) || (col==COL_PARKED && !(lift->pkState&Lift::STATE_ACTUAL))) {
+                QBrush redBackground(Qt::lightGray);
+                return redBackground;
+            }
             break;
         case Qt::TextAlignmentRole:
 
@@ -110,11 +129,25 @@ bool LiftTable::insertRows(int position, int rows, const QModelIndex &index)
     Q_UNUSED(index);
     beginInsertRows(QModelIndex(), position, position + rows - 1);
 
-    for (int row = 0; row < rows; ++row) {
-        QPair<QString, QString> pair(" ", " ");
+   /* for (int row = 0; row < rows; ++row) {
+        //QPair<QString, QString> pair(" ", " ");
         //listOfPairs.insert(position, pair);
-    }
-
+        liftCount=
+    }*/
+    liftCount=lifter->getLiftCount();
     endInsertRows();
     return true;
 }
+
+void LiftTable::updateRows()
+{
+    insertRows(0,1,QModelIndex());
+}
+
+void LiftTable::liftUpdate(int index)
+{
+    QModelIndex idxL = this->index(index,0);
+    QModelIndex idxR = this->index(index,COL_SIZE-1);
+    emit dataChanged(idxL,idxR);
+}
+

@@ -43,7 +43,7 @@ void GnetRaw::readPendingDatagrams()
             qDebug() << "echo: " << sender.toString() << datagram.toHex();
         }
         else {
-            emit received(GDatagram(datagram));
+            emit received(sender, GDatagram(datagram));
             qDebug() << "in: " << sender.toString() << datagram.toHex();
         }
     }

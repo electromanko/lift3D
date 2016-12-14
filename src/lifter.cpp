@@ -11,8 +11,8 @@ Lifter::Lifter(unsigned int selfAddr, unsigned int selfNet , unsigned int selfDe
     this->selfNet=selfNet;
     this->selfDevType= selfDevType;
     gnet= new GnetRaw();
-    connect(gnet, SIGNAL(received(GDatagram)),
-            this, SLOT(datagramReceive(GDatagram)));
+    connect(gnet, SIGNAL(received(QHostAddress, GDatagram)),
+            this, SLOT(datagramReceive(QHostAddress, GDatagram)));
 }
 
 Lifter::~Lifter()
@@ -32,7 +32,7 @@ void Lifter::findLifts()
 void Lifter::upDemand(int num)
 {
     Lift* lift;
-    if(num< liftList.size()){
+    if(num< liftList.size() && num>=0){
         lift = liftList.at(num);
         GDatagram datagram(0,selfAddr,selfNet,lift->addr, lift->net,selfDevType);
         datagram.appendCpd(Gcpd (CMD_WRITE,PORT_DIR_UP,1));
@@ -43,7 +43,7 @@ void Lifter::upDemand(int num)
 void Lifter::downDemand(int num)
 {
     Lift* lift;
-    if(num< liftList.size()){
+    if(num< liftList.size()&& num>=0){
         lift = liftList.at(num);
         GDatagram datagram(0,selfAddr,selfNet,lift->addr, lift->net,selfDevType);
         datagram.appendCpd(Gcpd (CMD_WRITE,PORT_DIR_DN,1));
@@ -54,7 +54,7 @@ void Lifter::downDemand(int num)
 void Lifter::stop(int num)
 {
     Lift* lift;
-    if(num< liftList.size()){
+    if(num< liftList.size()&& num>=0){
         lift = liftList.at(num);
         GDatagram datagram(0,selfAddr,selfNet,lift->addr, lift->net,selfDevType);
         datagram.appendCpd(Gcpd (CMD_WRITE,PORT_STOP,1));
@@ -75,31 +75,36 @@ Lift* Lifter::getLift(int i)
 }
 
 
-int Lifter::indexOfLiftList(unsigned int addr, unsigned int net, unsigned int devType)
+int Lifter::indexOfLiftList(QHostAddress ip, unsigned int addr, unsigned int net, unsigned int devType)
 {
     foreach (Lift *lift, this->liftList){
-        if (lift->addr == addr && lift->net==net && lift->devType == devType) return liftList.indexOf(lift);
+        if (lift->ip== ip && lift->addr == addr && lift->net==net && lift->devType == devType) return liftList.indexOf(lift);
     }
     return -1;
 }
 
-void Lifter::datagramReceive(GDatagram datagram)
+void Lifter::datagramReceive(QHostAddress ip, GDatagram datagram)
 {
     qDebug() << "Lifter:receive:datgram="<< datagram.toQByteArray().toHex();
-    int index = this->indexOfLiftList(datagram.addrFrom,datagram.netFrom, datagram.devType);
-    if (index<0)this->liftList.append(new Lift(datagram.addrFrom, datagram.netFrom,datagram.devType));
+    int index = this->indexOfLiftList(ip, datagram.addrFrom,datagram.netFrom, datagram.devType);
+    if (index<0){
+        this->liftList.append(new Lift(ip, datagram.addrFrom, datagram.netFrom,datagram.devType));
+        emit addedLiftToList();
+    }
     else {
-        cpdProcessing(liftList.at(index), datagram.cpd);
+        cpdProcessing(index, datagram.cpd);
     }
 }
 
-void Lifter::cpdProcessing(Lift *lift, QVector<Gcpd> &cpd)
+void Lifter::cpdProcessing(int index, QVector<Gcpd> &cpd)
 {
+
     QVector<Gcpd>::iterator i;
 
+    Lift *lift= liftList.at(index);
     for (i = cpd.begin(); i != cpd.end(); ++i){
-        switch(i->port){
-            case Lifter::PORT_FIND:
+        switch(i->port){ 
+        case Lifter::PORT_FIND:
             if(i->command  == Lifter::CMD_READ){
 
             }
@@ -108,7 +113,22 @@ void Lifter::cpdProcessing(Lift *lift, QVector<Gcpd> &cpd)
             }
 
             break;
+        case Lifter::PORT_POSITION:
+            if (i->command == Lifter::CMD_info_0B){
+                lift->heightCurrent=i->data;
+                lift->hcState|=Lift::STATE_ACTUAL|Lift::STATE_UPDATE;
+                emit liftUpdated(index);
+            }
+            break;
 
+        case Lifter::PORT_PARK:
+            if (i->command == Lifter::CMD_INFO){
+                if (i->data>0) lift->padked=true;
+                else lift->padked=false;
+                lift->pkState|=Lift::STATE_ACTUAL|Lift::STATE_UPDATE;
+                emit liftUpdated(index);
+            }
+            break;
         }
     }
 }

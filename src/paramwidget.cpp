@@ -1,7 +1,7 @@
 #include "include/paramwidget.h"
 
 #include <QGridLayout>
-
+#include <QHeaderView>
 
 
 ParamWidget::ParamWidget(QWidget *parent) : QWidget(parent)
@@ -16,6 +16,7 @@ ParamWidget::ParamWidget(QWidget *parent) : QWidget(parent)
 
     liftTableModel = new LiftTable(lifter);
     liftTableView->setModel(liftTableModel);
+    liftTableView->horizontalHeader()->setStretchLastSection(true);
 
     mainLayout->addWidget(liftTableView, 0,0);
     mainLayout->addWidget(findButton, 1,0);
@@ -34,6 +35,10 @@ ParamWidget::ParamWidget(QWidget *parent) : QWidget(parent)
             this, SLOT(downDemand()));
     connect(downButton, SIGNAL(released()),
             this, SLOT(stopMove()));
+    connect(lifter,SIGNAL(addedLiftToList()),
+            liftTableModel, SLOT(updateRows()));
+    connect(lifter,SIGNAL(liftUpdated(int)),
+            liftTableModel, SLOT(liftUpdate(int)));
 }
 
 ParamWidget::~ParamWidget()
@@ -53,8 +58,9 @@ void ParamWidget::upDemand()
     gnet->sendGDatagram(datagram);
     datagram.addrTo = 31;
     gnet->sendGDatagram(datagram);*/
-    lifter->upDemand(0);
-    lifter->upDemand(1);
+    lifter->upDemand(liftTableView->selectionModel()->currentIndex().row());
+    //lifter->upDemand(0);
+    //lifter->upDemand(1);
     qDebug("upDemand");// << QString("star");
 }
 
@@ -71,8 +77,10 @@ void ParamWidget::downDemand()
     datagram.addrTo = 31;
     gnet->sendGDatagram(datagram);*/
 
-    lifter->downDemand(0);
-    lifter->downDemand(1);
+    //lifter->downDemand(0);
+    //lifter->downDemand(1);
+
+    lifter->downDemand(liftTableView->selectionModel()->currentIndex().row());
     qDebug("downDemand"); //<< QString("finish");
 }
 
@@ -88,9 +96,10 @@ void ParamWidget::stopMove()
     gnet->sendGDatagram(datagram);
     datagram.addrTo = 31;
     gnet->sendGDatagram(datagram);*/
-    lifter->stop(0);
-    lifter->stop(1);
-    //liftTableModel->update();
+
+    //lifter->stop(0);
+    //lifter->stop(1);
+    lifter->stop(liftTableView->selectionModel()->currentIndex().row());
     qDebug("stop"); //<< QString("finish");
 }
 
