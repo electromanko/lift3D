@@ -90,7 +90,7 @@ void ParamWidget::stopMove()
     gnet->sendGDatagram(datagram);*/
     lifter->stop(0);
     lifter->stop(1);
-    liftTableModel->update();
+    //liftTableModel->update();
     qDebug("stop"); //<< QString("finish");
 }
 

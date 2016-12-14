@@ -19,7 +19,7 @@ public:
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
-
+    bool insertRows(int position, int rows, const QModelIndex &index);
     void update();
 private:
     Lifter *lifter;

@@ -105,10 +105,16 @@ QVariant LiftTable::data(const QModelIndex &index, int role) const
         return QVariant();
 }
 
-void LiftTable::update()
+bool LiftTable::insertRows(int position, int rows, const QModelIndex &index)
 {
-    QModelIndex top = createIndex(0,0);
+    Q_UNUSED(index);
+    beginInsertRows(QModelIndex(), position, position + rows - 1);
 
-    //emit a signal to make the view reread identified data
-    //emit rowsInserted(top,0, 2);
+    for (int row = 0; row < rows; ++row) {
+        QPair<QString, QString> pair(" ", " ");
+        //listOfPairs.insert(position, pair);
+    }
+
+    endInsertRows();
+    return true;
 }
