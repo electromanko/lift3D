@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Installer>
+    <Name>Lift3D</Name>
+    <Version>1.0.0</Version>
+    <Title>Lift3D</Title>
+    <Publisher>Gella</Publisher>
+    <!-- Directory name is used in component.xml -->
+    <StartMenuDir>Gella</StartMenuDir>
+    <TargetDir>@HomeDir@/Gella/Lift3D</TargetDir>
+</Installer>

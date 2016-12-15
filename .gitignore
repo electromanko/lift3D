@@ -1,1 +1,3 @@
 *.pro.user
+installer/lift3D/packages/org.gella.lift3d/data/*
+*.exe
