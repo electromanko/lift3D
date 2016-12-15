@@ -2,6 +2,8 @@
 
 #include <QGridLayout>
 #include <QHeaderView>
+#include <QMouseEvent>
+#include <QShortcut>
 
 
 ParamWidget::ParamWidget(QWidget *parent) : QWidget(parent)
@@ -9,19 +11,38 @@ ParamWidget::ParamWidget(QWidget *parent) : QWidget(parent)
     //gnet = new GnetRaw();
     lifter = new Lifter(15,0,32);
     liftTableView = new QTableView();
+
     upButton = new QPushButton(tr("&Up"));
+    //upButton->setFocusPolicy(Qt::NoFocus);
+    //upButton->setShortcut(QKeySequence(Qt::Key_8));
+
     downButton = new QPushButton(tr("&Down"));
+    downButton->setFocusPolicy(Qt::NoFocus);
+    //downButton->setShortcut(QKeySequence(Qt::Key_2));
+
     findButton = new QPushButton(tr("&Find"));
+    findButton->setFocusPolicy(Qt::NoFocus);
+
+    parkButton = new QPushButton(tr("&Park"));
+    parkButton->setFocusPolicy(Qt::NoFocus);
+
     QGridLayout *mainLayout = new QGridLayout;
 
     liftTableModel = new LiftTable(lifter);
     liftTableView->setModel(liftTableModel);
     liftTableView->horizontalHeader()->setStretchLastSection(true);
+    QHeaderView *verticalHeader = liftTableView->verticalHeader();
+    verticalHeader->setSectionResizeMode(QHeaderView::ResizeToContents);
+    verticalHeader->setDefaultSectionSize(24);
+    liftTableView->setSelectionBehavior(QAbstractItemView::SelectRows);
+    liftTableView->verticalHeader()->hide();
+    liftTableView->installEventFilter(this);
 
     mainLayout->addWidget(liftTableView, 0,0);
     mainLayout->addWidget(findButton, 1,0);
     mainLayout->addWidget(upButton, 2,0);
     mainLayout->addWidget(downButton, 3,0);
+    mainLayout->addWidget(parkButton, 4,0);
 
     setLayout(mainLayout);
 
@@ -35,8 +56,14 @@ ParamWidget::ParamWidget(QWidget *parent) : QWidget(parent)
             this, SLOT(downDemand()));
     connect(downButton, SIGNAL(released()),
             this, SLOT(stopMove()));
-    connect(lifter,SIGNAL(addedLiftToList()),
-            liftTableModel, SLOT(updateRows()));
+    connect(parkButton, SIGNAL(clicked()),
+            this, SLOT(park()));
+
+    connect(lifter,SIGNAL(addedLiftToList(int, int )),
+            liftTableModel, SLOT(addRows(int, int )));
+    connect(lifter,SIGNAL(removedLiftToList(int, int )),
+            liftTableModel, SLOT(deleteRows(int, int )));
+
     connect(lifter,SIGNAL(liftUpdated(int)),
             liftTableModel, SLOT(liftUpdate(int)));
 }
@@ -58,7 +85,11 @@ void ParamWidget::upDemand()
     gnet->sendGDatagram(datagram);
     datagram.addrTo = 31;
     gnet->sendGDatagram(datagram);*/
-    lifter->upDemand(liftTableView->selectionModel()->currentIndex().row());
+    QList<QModelIndex> list=liftTableView->selectionModel()->selectedRows();
+    QList<QModelIndex>::iterator i;
+    for (i=list.begin();i!=list.end();++i){
+        lifter->upDemand(i->row());
+    }
     //lifter->upDemand(0);
     //lifter->upDemand(1);
     qDebug("upDemand");// << QString("star");
@@ -80,7 +111,12 @@ void ParamWidget::downDemand()
     //lifter->downDemand(0);
     //lifter->downDemand(1);
 
-    lifter->downDemand(liftTableView->selectionModel()->currentIndex().row());
+    //lifter->downDemand(liftTableView->selectionModel()->currentIndex().row());
+    QList<QModelIndex> list=liftTableView->selectionModel()->selectedRows();
+    QList<QModelIndex>::iterator i;
+    for (i=list.begin();i!=list.end();++i){
+        lifter->downDemand(i->row());
+    }
     qDebug("downDemand"); //<< QString("finish");
 }
 
@@ -99,12 +135,67 @@ void ParamWidget::stopMove()
 
     //lifter->stop(0);
     //lifter->stop(1);
-    lifter->stop(liftTableView->selectionModel()->currentIndex().row());
+    //lifter->stop(liftTableView->selectionModel()->currentIndex().row());
+    QList<QModelIndex> list=liftTableView->selectionModel()->selectedRows();
+    QList<QModelIndex>::iterator i;
+    for (i=list.begin();i!=list.end();++i){
+        lifter->stop(i->row());
+    }
     qDebug("stop"); //<< QString("finish");
+}
+
+void ParamWidget::stopAll()
+{
+ lifter->stopAll();
 }
 
 void ParamWidget::findLift()
 {
     lifter->findLifts();
+}
+
+void ParamWidget::park()
+{
+    QList<QModelIndex> list=liftTableView->selectionModel()->selectedRows();
+    QList<QModelIndex>::iterator i;
+    for (i=list.begin();i!=list.end();++i){
+        lifter->goPark(i->row());
+    }
+    //lifter->goPark(liftTableView->selectionModel()->currentIndex().row());
+
+}
+
+bool ParamWidget::eventFilter(QObject *target, QEvent *event)
+{
+
+        if (event->type() == QEvent::KeyPress) {
+            QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+            if (keyEvent->isAutoRepeat())return QObject::eventFilter(target, event);
+            switch (keyEvent->key()){
+            case Qt::Key_W:
+                upDemand();
+                return true;
+            case Qt::Key_S:
+                downDemand();
+                return true;
+            case Qt::Key_Q:
+                park();
+                return true;
+            case Qt::Key_Space:
+                stopAll();
+                return true;
+            }
+        } else if (event->type() == QEvent::KeyRelease) {
+            QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+            if (keyEvent->isAutoRepeat())return QObject::eventFilter(target, event);
+            switch (keyEvent->key()){
+            case Qt::Key_W:
+            case Qt::Key_S:
+                stopMove();
+                return true;
+            }
+        }
+
+    return QObject::eventFilter(target, event);
 }
 

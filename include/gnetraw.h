@@ -60,6 +60,7 @@ public:
     void appendCpd(const Gcpd &cpd);
     void clearCpd();
     QByteArray toQByteArray();
+    QString toString();
 
     QVector<Gcpd> cpd;
 };

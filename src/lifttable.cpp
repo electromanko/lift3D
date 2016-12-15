@@ -127,6 +127,7 @@ QVariant LiftTable::data(const QModelIndex &index, int role) const
 bool LiftTable::insertRows(int position, int rows, const QModelIndex &index)
 {
     Q_UNUSED(index);
+    if (rows<=0) return false;
     beginInsertRows(QModelIndex(), position, position + rows - 1);
 
    /* for (int row = 0; row < rows; ++row) {
@@ -134,14 +135,27 @@ bool LiftTable::insertRows(int position, int rows, const QModelIndex &index)
         //listOfPairs.insert(position, pair);
         liftCount=
     }*/
-    liftCount=lifter->getLiftCount();
+    liftCount+=rows;
     endInsertRows();
     return true;
 }
 
-void LiftTable::updateRows()
+bool LiftTable::removeRows(int position, int rows, const QModelIndex &index){
+    Q_UNUSED(index);
+    if (rows<=0) return false;
+    beginRemoveRows(QModelIndex(), position, position + rows - 1);
+    liftCount-=rows;
+    endRemoveRows();
+}
+
+void LiftTable::addRows(int position, int rows)
 {
-    insertRows(0,1,QModelIndex());
+    insertRows(position,rows,QModelIndex());
+}
+
+void LiftTable::deleteRows(int position, int rows)
+{
+    removeRows(position,rows,QModelIndex());
 }
 
 void LiftTable::liftUpdate(int index)

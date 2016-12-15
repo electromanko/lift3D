@@ -24,6 +24,7 @@ Lifter::~Lifter()
 
 void Lifter::findLifts()
 {
+    clearLiftList();
     GDatagram datagram(0,selfAddr,selfNet,255,0,selfDevType);
     datagram.appendCpd(Gcpd (CMD_READ,PORT_FIND,1));
     gnet->sendGDatagram(datagram);
@@ -62,6 +63,25 @@ void Lifter::stop(int num)
     }
 }
 
+void Lifter::stopAll()
+{
+    GDatagram datagram(0,selfAddr,selfNet,255, 255,selfDevType);
+    datagram.appendCpd(Gcpd (CMD_WRITE,PORT_STOP,1));
+    gnet->sendGDatagram(datagram);
+}
+
+
+void Lifter::goPark(int num)
+{
+    Lift* lift;
+    if(num< liftList.size()&& num>=0){
+        lift = liftList.at(num);
+        GDatagram datagram(0,selfAddr,selfNet,lift->addr, lift->net,selfDevType);
+        datagram.appendCpd(Gcpd (CMD_WRITE,PORT_PARK,1));
+        gnet->sendGDatagram(datagram);
+    }
+}
+
 int Lifter::getLiftCount()
 {
     return this->liftList.size();
@@ -72,6 +92,14 @@ Lift* Lifter::getLift(int i)
     if (i<liftList.size()){
     return this->liftList.at(i);
     } else return NULL;
+}
+
+void Lifter::clearLiftList()
+{
+    emit removedLiftToList(0,liftList.size());
+    qDeleteAll(liftList);
+    liftList.clear();
+
 }
 
 
@@ -85,11 +113,13 @@ int Lifter::indexOfLiftList(QHostAddress ip, unsigned int addr, unsigned int net
 
 void Lifter::datagramReceive(QHostAddress ip, GDatagram datagram)
 {
-    qDebug() << "Lifter:receive:datgram="<< datagram.toQByteArray().toHex();
+    qDebug() << "Lifter:receive:datgram="<< datagram.toString();
+    if (datagram.devType!=41) return;
     int index = this->indexOfLiftList(ip, datagram.addrFrom,datagram.netFrom, datagram.devType);
     if (index<0){
-        this->liftList.append(new Lift(ip, datagram.addrFrom, datagram.netFrom,datagram.devType));
-        emit addedLiftToList();
+        Lift* lift = new Lift(ip, datagram.addrFrom, datagram.netFrom,datagram.devType);
+        this->liftList.append(lift);
+        emit addedLiftToList(this->liftList.indexOf(lift),1);
     }
     else {
         cpdProcessing(index, datagram.cpd);
@@ -118,6 +148,8 @@ void Lifter::cpdProcessing(int index, QVector<Gcpd> &cpd)
                 lift->heightCurrent=i->data;
                 lift->hcState|=Lift::STATE_ACTUAL|Lift::STATE_UPDATE;
                 emit liftUpdated(index);
+            } else if(i->command == Lifter::CMD_info_1B){
+
             }
             break;
 

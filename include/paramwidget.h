@@ -20,7 +20,9 @@ public:
     QPushButton *upButton;
     QPushButton *downButton;
     QPushButton *findButton;
+    QPushButton *parkButton;
 
+    bool eventFilter(QObject *target, QEvent *event);
 private:
     GnetRaw *gnet;
     Lifter *lifter;
@@ -30,7 +32,9 @@ public slots:
     void upDemand();
     void downDemand();
     void stopMove();
+    void stopAll();
     void findLift();
+    void park();
 };
 
 #endif // PARAMWIDGET_H

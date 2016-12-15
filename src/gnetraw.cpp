@@ -161,6 +161,25 @@ QByteArray GDatagram::toQByteArray()
     return datagram;
 }
 
+QString GDatagram::toString()
+{
+    QString str;
+    str = QString("sz %1:n %2:af %3:nf %4:at %5:nt %6:dt %7:")\
+            .arg(this->getSize()-1)\
+            .arg(this->number)\
+            .arg(this->addrFrom)\
+            .arg(this->netFrom)\
+            .arg(this->addrTo)\
+            .arg(this->netTo)\
+            .arg(this->devType)\
+            ;
+    QVector<Gcpd>::iterator i;
+    for (i = cpd.begin(); i != cpd.end(); ++i){
+        str+= QString ("(c %1:p %2:d %3)").arg(i->command).arg(i->port).arg(i->data);
+    }
+    return str;
+}
+
 GDatagram::GDatagram(QByteArray array)
 {
    int size = array[0];

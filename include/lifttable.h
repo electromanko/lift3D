@@ -29,12 +29,14 @@ public:
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     bool insertRows(int position, int rows, const QModelIndex &index);
+    bool removeRows(int position, int rows, const QModelIndex &index);
 private:
     Lifter *lifter;
     int liftCount;
 
 public slots:
-    void updateRows();
+    void addRows(int position, int count);
+    void deleteRows(int position, int count);
     void liftUpdate(int index);
 };
 

@@ -36,8 +36,11 @@ public:
     void upDemand(int num);
     void downDemand(int num);
     void stop(int num);
+    void stopAll();
+    void goPark(int num);
     int getLiftCount();
     Lift* getLift(int i);
+    void clearLiftList();
 
 protected:
     unsigned int selfAddr;
@@ -50,9 +53,11 @@ private:
     int indexOfLiftList(QHostAddress ip, unsigned int addr, unsigned int net, unsigned int devType);
     void cpdProcessing(int index, QVector<Gcpd> &cpd);
 
+
 signals:
     void readyToSend(GDatagram datagram);
-    void addedLiftToList();
+    void addedLiftToList(int position,int row);
+    void removedLiftToList(int position,int row);
     void liftUpdated(int index);
 public slots:
     void datagramReceive(QHostAddress ip, GDatagram datagram);
