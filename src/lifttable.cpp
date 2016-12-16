@@ -70,6 +70,7 @@ QVariant LiftTable::data(const QModelIndex &index, int role) const
         int row = index.row();
         int col = index.column();
         Lift* lift = lifter->getLift(row);
+        QBrush backgroundBrush;
 
         switch(role){
         case Qt::DisplayRole:
@@ -100,11 +101,16 @@ QVariant LiftTable::data(const QModelIndex &index, int role) const
                 QBrush redBackground(Qt::red);
                 return redBackground;
             }*/
+            if (row%2){
+                backgroundBrush=QColor(0xAE,0xF3,0xff,50);
+            }
 
             if ((col==COL_HCURR && !(lift->hcState&Lift::STATE_ACTUAL)) || (col==COL_PARKED && !(lift->pkState&Lift::STATE_ACTUAL))) {
-                QBrush redBackground(Qt::lightGray);
-                return redBackground;
+                //QBrush redBackground(Qt::lightGray);
+                backgroundBrush=Qt::lightGray;
+
             }
+            return backgroundBrush;
             break;
         case Qt::TextAlignmentRole:
 

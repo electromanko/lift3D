@@ -4,6 +4,7 @@
 #include <QHeaderView>
 #include <QMouseEvent>
 #include <QShortcut>
+#include <QInputDialog>
 
 
 ParamWidget::ParamWidget(QWidget *parent) : QWidget(parent)
@@ -13,7 +14,7 @@ ParamWidget::ParamWidget(QWidget *parent) : QWidget(parent)
     liftTableView = new QTableView();
 
     upButton = new QPushButton(tr("&Up"));
-    //upButton->setFocusPolicy(Qt::NoFocus);
+    upButton->setFocusPolicy(Qt::NoFocus);
     //upButton->setShortcut(QKeySequence(Qt::Key_8));
 
     downButton = new QPushButton(tr("&Down"));
@@ -37,6 +38,8 @@ ParamWidget::ParamWidget(QWidget *parent) : QWidget(parent)
     liftTableView->setSelectionBehavior(QAbstractItemView::SelectRows);
     liftTableView->verticalHeader()->hide();
     liftTableView->installEventFilter(this);
+    liftTableView->setShowGrid(false);
+
 
     mainLayout->addWidget(liftTableView, 0,0);
     mainLayout->addWidget(findButton, 1,0);
@@ -44,6 +47,7 @@ ParamWidget::ParamWidget(QWidget *parent) : QWidget(parent)
     mainLayout->addWidget(downButton, 3,0);
     mainLayout->addWidget(parkButton, 4,0);
 
+    adjustLiftTableSize();
     setLayout(mainLayout);
 
     connect(findButton, SIGNAL(clicked()),
@@ -165,6 +169,22 @@ void ParamWidget::park()
 
 }
 
+void ParamWidget::goTo()
+{
+    bool ok;
+    int hmm = QInputDialog::getInt(this, tr("Go"),
+                                 tr("Height(mm):"), 0, 0, 11000, 1, &ok);
+    if (ok)
+    {
+        QList<QModelIndex> list=liftTableView->selectionModel()->selectedRows();
+        QList<QModelIndex>::iterator i;
+        for (i=list.begin();i!=list.end();++i){
+            lifter->goMm(i->row(), hmm);
+        }
+        qDebug("stop"); //<< QString("finish");
+    }
+}
+
 bool ParamWidget::eventFilter(QObject *target, QEvent *event)
 {
 
@@ -178,11 +198,15 @@ bool ParamWidget::eventFilter(QObject *target, QEvent *event)
             case Qt::Key_S:
                 downDemand();
                 return true;
-            case Qt::Key_Q:
+            case Qt::Key_P:
                 park();
                 return true;
             case Qt::Key_Space:
                 stopAll();
+                return true;
+            case Qt::Key_G:
+            case Qt::Key_Return:
+                goTo();
                 return true;
             }
         } else if (event->type() == QEvent::KeyRelease) {
@@ -198,4 +222,20 @@ bool ParamWidget::eventFilter(QObject *target, QEvent *event)
 
     return QObject::eventFilter(target, event);
 }
+
+void ParamWidget::adjustLiftTableSize()
+{
+    liftTableView->resizeColumnToContents(1);
+    liftTableView->resizeColumnToContents(2);
+    liftTableView->resizeColumnToContents(3);
+    liftTableView->resizeColumnToContents(4);
+    liftTableView->resizeColumnToContents(5);
+
+    QRect rect = liftTableView->geometry();
+    rect.setWidth(2 + liftTableView->verticalHeader()->width() +
+            liftTableView->columnWidth(0) + liftTableView->columnWidth(1) + liftTableView->columnWidth(2)
+                  + liftTableView->columnWidth(3) + liftTableView->columnWidth(4) + liftTableView->columnWidth(5));
+    liftTableView->setGeometry(rect);
+}
+
 

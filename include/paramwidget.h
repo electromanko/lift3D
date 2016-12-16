@@ -26,6 +26,7 @@ public:
 private:
     GnetRaw *gnet;
     Lifter *lifter;
+    void adjustLiftTableSize();
 signals:
 
 public slots:
@@ -35,6 +36,7 @@ public slots:
     void stopAll();
     void findLift();
     void park();
+    void goTo();
 };
 
 #endif // PARAMWIDGET_H

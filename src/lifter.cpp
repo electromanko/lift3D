@@ -82,6 +82,24 @@ void Lifter::goPark(int num)
     }
 }
 
+void Lifter::goMm(int num, int height)
+{
+    Lift* lift;
+    int dm=height/100;
+    int cm=(height%100)/10;
+    int mm=height-dm*100-cm*10;
+    //qDebug()<<dm<< " "<<cm<< " "<<mm;
+    if(num< liftList.size()&& num>=0){
+        lift = liftList.at(num);
+        GDatagram datagram(0,selfAddr,selfNet,lift->addr, lift->net,selfDevType);
+        datagram.appendCpd(Gcpd (CMD_WRITE_1B,PORT_POSITION,cm));
+        gnet->sendGDatagram(datagram);
+        datagram.appendCpd(Gcpd (CMD_WRITE_0B,PORT_POSITION,dm<0xff?dm:0xff));
+        gnet->sendGDatagram(datagram);
+
+    }
+}
+
 int Lifter::getLiftCount()
 {
     return this->liftList.size();
@@ -128,7 +146,7 @@ void Lifter::datagramReceive(QHostAddress ip, GDatagram datagram)
 
 void Lifter::cpdProcessing(int index, QVector<Gcpd> &cpd)
 {
-
+    static unsigned int cm=0;
     QVector<Gcpd>::iterator i;
 
     Lift *lift= liftList.at(index);
@@ -144,13 +162,13 @@ void Lifter::cpdProcessing(int index, QVector<Gcpd> &cpd)
 
             break;
         case Lifter::PORT_POSITION:
-            if (i->command == Lifter::CMD_info_0B){
-                lift->heightCurrent=i->data;
+            if (i->command == Lifter::CMD_INFO_0B){
+                lift->heightCurrent=i->data*100+cm*10;
                 lift->hcState|=Lift::STATE_ACTUAL|Lift::STATE_UPDATE;
                 emit liftUpdated(index);
-            } else if(i->command == Lifter::CMD_info_1B){
-
-            }
+            } else if(i->command == Lifter::CMD_INFO_1B){
+                cm=i->data;
+              }
             break;
 
         case Lifter::PORT_PARK:
