@@ -43,6 +43,7 @@ public:
     void stopAll();
     void goPark(int num);
     void goMm(int num, int height);
+    void sendCmd(int num, QVector<Gcpd> &cpd);
     int getLiftCount();
     Lift* getLift(int i);
     void clearLiftList();

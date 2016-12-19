@@ -100,6 +100,21 @@ void Lifter::goMm(int num, int height)
     }
 }
 
+void Lifter::sendCmd(int num, QVector<Gcpd> &cpd)
+{
+    Lift* lift;
+
+    if(num< liftList.size()&& num>=0){
+        lift = liftList.at(num);
+        GDatagram datagram(0,selfAddr,selfNet,lift->addr, lift->net,selfDevType, cpd);
+        //datagram.appendCpd(Gcpd (CMD_WRITE_1B,PORT_POSITION,cm));
+        gnet->sendGDatagram(datagram);
+
+
+    }
+}
+
+
 int Lifter::getLiftCount()
 {
     return this->liftList.size();

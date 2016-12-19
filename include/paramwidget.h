@@ -37,6 +37,7 @@ public slots:
     void findLift();
     void park();
     void goTo();
+    void sendCmd();
 };
 
 #endif // PARAMWIDGET_H

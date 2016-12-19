@@ -1,4 +1,5 @@
 #include "include/paramwidget.h"
+#include "include/cmddialog.h"
 
 #include <QGridLayout>
 #include <QHeaderView>
@@ -185,6 +186,11 @@ void ParamWidget::goTo()
     }
 }
 
+void ParamWidget::sendCmd(){
+   CmdDialog dialog(this);
+   dialog.exec();
+}
+
 bool ParamWidget::eventFilter(QObject *target, QEvent *event)
 {
 
@@ -207,6 +213,9 @@ bool ParamWidget::eventFilter(QObject *target, QEvent *event)
             case Qt::Key_G:
             case Qt::Key_Return:
                 goTo();
+                return true;
+            case Qt::Key_C:
+                sendCmd();
                 return true;
             }
         } else if (event->type() == QEvent::KeyRelease) {

@@ -23,7 +23,8 @@ SOURCES += src/main.cpp\
     src/gnetraw.cpp \
     src/lifter.cpp \
     src/lift.cpp \
-    src/lifttable.cpp
+    src/lifttable.cpp \
+    src/cmddialog.cpp
 
 HEADERS  += include/mainwindow.h\
             include/glwidget.h\
@@ -35,7 +36,8 @@ HEADERS  += include/mainwindow.h\
             include/gnetraw.h \
             include/lifter.h \
             include/lift.h \
-            include/lifttable.h
+            include/lifttable.h \
+    include/cmddialog.h
 
 FORMS    += form/mainwindow.ui
 
