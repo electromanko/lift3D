@@ -188,7 +188,17 @@ void ParamWidget::goTo()
 
 void ParamWidget::sendCmd(){
    CmdDialog dialog(this);
-   dialog.exec();
+
+   if (dialog.exec() == QDialog::Accepted ) {
+       qDebug() << "You pressed OK!";
+        QVector<Gcpd> vect = dialog.getCpd();
+        if (vect.count()==0) return;
+        QList<QModelIndex> list=liftTableView->selectionModel()->selectedRows();
+        QList<QModelIndex>::iterator i;
+        for (i=list.begin();i!=list.end();++i){
+            lifter->sendCmd(i->row(), vect);
+        }
+      }
 }
 
 bool ParamWidget::eventFilter(QObject *target, QEvent *event)
