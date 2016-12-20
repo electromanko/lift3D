@@ -40,7 +40,7 @@ void GnetRaw::readPendingDatagrams()
             }
         }
         if(selfA){
-            qDebug() << "echo: " << sender.toString() << datagram.toHex();
+            qDebug() << "echo: " << sender.toString() << GDatagram(datagram).toString();
         }
         else {
             emit received(sender, GDatagram(datagram));

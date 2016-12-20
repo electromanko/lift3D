@@ -31,7 +31,8 @@ public:
     static const unsigned char PORT_DIR_DN=36;
     static const unsigned char PORT_STOP=37;
     static const unsigned char PORT_PARK=38;
-
+    static const unsigned char PORT_POS_MM=75;
+    static const unsigned char PORT_POS_RAW=76;
 
     explicit Lifter(QObject *parent = 0);
     explicit Lifter(unsigned int selfAddr=0, unsigned int selfNet=0,unsigned int selfDevType=0, QObject *parent = 0);
@@ -43,6 +44,8 @@ public:
     void stopAll();
     void goPark(int num);
     void goMm(int num, int height);
+    void goMm75(int num, int height);
+    void goRaw(int num, int height);
     void sendCmd(int num, QVector<Gcpd> &cpd);
     int getLiftCount();
     Lift* getLift(int i);

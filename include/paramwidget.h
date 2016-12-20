@@ -21,6 +21,7 @@ public:
     QPushButton *downButton;
     QPushButton *findButton;
     QPushButton *parkButton;
+    QSlider *heightSlider;
 
     bool eventFilter(QObject *target, QEvent *event);
 private:
@@ -38,6 +39,7 @@ public slots:
     void park();
     void goTo();
     void sendCmd();
+    void goSlider(int value);
 };
 
 #endif // PARAMWIDGET_H

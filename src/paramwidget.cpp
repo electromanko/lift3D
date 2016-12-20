@@ -28,6 +28,9 @@ ParamWidget::ParamWidget(QWidget *parent) : QWidget(parent)
     parkButton = new QPushButton(tr("&Park"));
     parkButton->setFocusPolicy(Qt::NoFocus);
 
+    heightSlider = new QSlider(Qt::Horizontal);
+    //heightSlider->se
+
     QGridLayout *mainLayout = new QGridLayout;
 
     liftTableModel = new LiftTable(lifter);
@@ -47,6 +50,7 @@ ParamWidget::ParamWidget(QWidget *parent) : QWidget(parent)
     mainLayout->addWidget(upButton, 2,0);
     mainLayout->addWidget(downButton, 3,0);
     mainLayout->addWidget(parkButton, 4,0);
+    mainLayout->addWidget(heightSlider,5,0);
 
     adjustLiftTableSize();
     setLayout(mainLayout);
@@ -63,6 +67,8 @@ ParamWidget::ParamWidget(QWidget *parent) : QWidget(parent)
             this, SLOT(stopMove()));
     connect(parkButton, SIGNAL(clicked()),
             this, SLOT(park()));
+    connect(heightSlider, SIGNAL(valueChanged(int)),
+            this, SLOT(goSlider(int)));
 
     connect(lifter,SIGNAL(addedLiftToList(int, int )),
             liftTableModel, SLOT(addRows(int, int )));
@@ -174,15 +180,25 @@ void ParamWidget::goTo()
 {
     bool ok;
     int hmm = QInputDialog::getInt(this, tr("Go"),
-                                 tr("Height(mm):"), 0, 0, 11000, 1, &ok);
+                                 tr("Height(mm):"), 0, 0, 100000, 1, &ok);
     if (ok)
     {
         QList<QModelIndex> list=liftTableView->selectionModel()->selectedRows();
         QList<QModelIndex>::iterator i;
         for (i=list.begin();i!=list.end();++i){
-            lifter->goMm(i->row(), hmm);
+            lifter->goRaw(i->row(), hmm);
         }
-        qDebug("stop"); //<< QString("finish");
+        qDebug("goTo"); //<< QString("finish");
+    }
+}
+
+void ParamWidget::goSlider(int value){
+    qDebug() << value;
+    int hmm=value*5;
+    QList<QModelIndex> list=liftTableView->selectionModel()->selectedRows();
+    QList<QModelIndex>::iterator i;
+    for (i=list.begin();i!=list.end();++i){
+        lifter->goRaw(i->row(), hmm);
     }
 }
 
@@ -216,6 +232,9 @@ bool ParamWidget::eventFilter(QObject *target, QEvent *event)
                 return true;
             case Qt::Key_P:
                 park();
+                return true;
+            case Qt::Key_F:
+                findLift();
                 return true;
             case Qt::Key_Space:
                 stopAll();

@@ -93,8 +93,39 @@ void Lifter::goMm(int num, int height)
         lift = liftList.at(num);
         GDatagram datagram(0,selfAddr,selfNet,lift->addr, lift->net,selfDevType);
         datagram.appendCpd(Gcpd (CMD_WRITE_1B,PORT_POSITION,cm));
-        gnet->sendGDatagram(datagram);
         datagram.appendCpd(Gcpd (CMD_WRITE_0B,PORT_POSITION,dm<0xff?dm:0xff));
+        gnet->sendGDatagram(datagram);
+
+    }
+}
+
+void Lifter::goMm75(int num, int height)
+{
+    Lift* lift;
+    int dm=height/100;
+    int mm=height%100;
+    qDebug()<<dm<< " "<<mm;
+    if(num< liftList.size()&& num>=0){
+        lift = liftList.at(num);
+        GDatagram datagram(0,selfAddr,selfNet,lift->addr, lift->net,selfDevType);
+        datagram.appendCpd(Gcpd (CMD_WRITE_0B,PORT_POS_MM,dm));
+        datagram.appendCpd(Gcpd (CMD_WRITE_1B,PORT_POS_MM,mm));
+        gnet->sendGDatagram(datagram);
+
+    }
+}
+
+void Lifter::goRaw(int num, int height)
+{
+    Lift* lift;
+    int dm=height/100;
+    int mm=height%100;
+    qDebug()<<dm<< " "<<mm;
+    if(num< liftList.size()&& num>=0){
+        lift = liftList.at(num);
+        GDatagram datagram(0,selfAddr,selfNet,lift->addr, lift->net,selfDevType);
+        datagram.appendCpd(Gcpd (CMD_WRITE_0B,PORT_POS_RAW,dm));
+        datagram.appendCpd(Gcpd (CMD_WRITE_1B,PORT_POS_RAW,mm));
         gnet->sendGDatagram(datagram);
 
     }

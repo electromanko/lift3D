@@ -39,11 +39,13 @@ CmdDialog::CmdDialog(QWidget *parent) : QDialog(parent)
     portCombo = new QComboBox();
     portCombo->setEditable(true);
     portCombo->addItem(QString(""));
+    portCombo->addItem(QString("ADDRESS(7)"),QVariant(7));
     portCombo->addItem(QString("POSITION(32)"),QVariant(32));
     portCombo->addItem(QString("DIR_UP(35)"),QVariant(35));
     portCombo->addItem(QString("DIR_DN(36)"),QVariant(36));
     portCombo->addItem(QString("STOP(37)"),QVariant(37));
     portCombo->addItem(QString("PARK(38)"),QVariant(38));
+    portCombo->addItem(QString("SERVO_SW(73)"),QVariant(73));
 
 
     comandCombo2 = new QComboBox();
@@ -122,8 +124,10 @@ QVector<Gcpd> CmdDialog::getCpd()
         d=dl[i]->text().toInt();
     else validate=false;
 
-    if (validate) qDebug() << QString("c%1,p%2,d%3").arg(c).arg(p).arg(d);
-    v.append(Gcpd(1,1,1));
+    if (validate){
+        qDebug() << QString("c%1,p%2,d%3").arg(c).arg(p).arg(d);
+        v.append(Gcpd(c,p,d));
+    }
     }
     return v;
 }
