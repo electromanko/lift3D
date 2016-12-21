@@ -8,6 +8,7 @@
 #include <QTableView>
 #include <QPushButton>
 #include <QWidget>
+#include <QTimer>
 
 class ParamWidget : public QWidget
 {
@@ -22,6 +23,9 @@ public:
     QPushButton *findButton;
     QPushButton *parkButton;
     QSlider *heightSlider;
+    QTimer *moveTimer;
+
+    bool timerStartFlag;
 
     bool eventFilter(QObject *target, QEvent *event);
 private:
@@ -40,6 +44,7 @@ public slots:
     void goTo();
     void sendCmd();
     void goSlider(int value);
+    void moveTimerTimeout();
 };
 
 #endif // PARAMWIDGET_H

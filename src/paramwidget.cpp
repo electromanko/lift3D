@@ -44,6 +44,9 @@ ParamWidget::ParamWidget(QWidget *parent) : QWidget(parent)
     liftTableView->installEventFilter(this);
     liftTableView->setShowGrid(false);
 
+    moveTimer = new QTimer(this);
+    connect(moveTimer, SIGNAL(timeout()), this, SLOT(moveTimerTimeout()));
+
 
     mainLayout->addWidget(liftTableView, 0,0);
     mainLayout->addWidget(findButton, 1,0);
@@ -194,11 +197,26 @@ void ParamWidget::goTo()
 
 void ParamWidget::goSlider(int value){
     qDebug() << value;
-    int hmm=value*5;
+    int hmm=value;
     QList<QModelIndex> list=liftTableView->selectionModel()->selectedRows();
     QList<QModelIndex>::iterator i;
     for (i=list.begin();i!=list.end();++i){
         lifter->goRaw(i->row(), hmm);
+    }
+}
+
+void ParamWidget::moveTimerTimeout()
+{
+    static int value;
+    if (this->timerStartFlag) {
+        value=0;
+        timerStartFlag=0;
+    }
+    value+=1;
+    QList<QModelIndex> list=liftTableView->selectionModel()->selectedRows();
+    QList<QModelIndex>::iterator i;
+    for (i=list.begin();i!=list.end();++i){
+        lifter->goRaw(i->row(), value);
     }
 }
 
@@ -245,6 +263,13 @@ bool ParamWidget::eventFilter(QObject *target, QEvent *event)
                 return true;
             case Qt::Key_C:
                 sendCmd();
+                return true;
+            case Qt::Key_Z:
+                this->timerStartFlag=true;
+                moveTimer->start(10);
+                return true;
+            case Qt::Key_X:
+                moveTimer->stop();
                 return true;
             }
         } else if (event->type() == QEvent::KeyRelease) {
