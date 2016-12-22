@@ -118,14 +118,15 @@ void Lifter::goMm75(int num, int height)
 void Lifter::goRaw(int num, int height)
 {
     Lift* lift;
-    int dm=height/100;
-    int mm=height%100;
-    qDebug()<<dm<< " "<<mm;
+    //int dm=height/100;
+    //int mm=height%100;
+    //qDebug()<<dm<< " "<<mm;
     if(num< liftList.size()&& num>=0){
         lift = liftList.at(num);
         GDatagram datagram(0,selfAddr,selfNet,lift->addr, lift->net,selfDevType);
-        datagram.appendCpd(Gcpd (CMD_WRITE_0B,PORT_POS_RAW,dm));
-        datagram.appendCpd(Gcpd (CMD_WRITE_1B,PORT_POS_RAW,mm));
+        datagram.appendCpd(Gcpd (CMD_WRITE_0B,PORT_POS_RAW,(unsigned char)(height>>8)));
+        datagram.appendCpd(Gcpd (CMD_WRITE_1B,PORT_POS_RAW,(unsigned char)(height&0xFF)));
+
         gnet->sendGDatagram(datagram);
 
     }
