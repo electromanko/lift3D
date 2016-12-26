@@ -1,9 +1,9 @@
 #include "include/lifter.h"
 
-Lifter::Lifter(QObject *parent) : QObject(parent)
+/*Lifter::Lifter(QObject *parent) : QObject(parent)
 {
 
-}
+}*/
 
 Lifter::Lifter(unsigned int selfAddr, unsigned int selfNet , unsigned int selfDevType, QObject *parent) : QObject(parent)
 {
@@ -172,6 +172,14 @@ int Lifter::indexOfLiftList(QHostAddress ip, unsigned int addr, unsigned int net
 {
     foreach (Lift *lift, this->liftList){
         if (lift->ip== ip && lift->addr == addr && lift->net==net && lift->devType == devType) return liftList.indexOf(lift);
+    }
+    return -1;
+}
+
+int Lifter::indexOfLiftList(unsigned int addr, unsigned int net, unsigned int devType)
+{
+    foreach (Lift *lift, this->liftList){
+        if (lift->addr == addr && lift->net==net && lift->devType == devType) return liftList.indexOf(lift);
     }
     return -1;
 }

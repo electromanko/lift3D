@@ -34,7 +34,7 @@ public:
     static const unsigned char PORT_POS_MM=75;
     static const unsigned char PORT_POS_RAW=76;
 
-    explicit Lifter(QObject *parent = 0);
+    //explicit Lifter(QObject *parent = 0);
     explicit Lifter(unsigned int selfAddr=0, unsigned int selfNet=0,unsigned int selfDevType=0, QObject *parent = 0);
     virtual ~Lifter();
     void findLifts();
@@ -57,9 +57,11 @@ protected:
     unsigned int selfDevType;
     QList<Lift*> liftList;
     GnetRaw *gnet;
+    int indexOfLiftList(QHostAddress ip, unsigned int addr, unsigned int net, unsigned int devType);
+    int indexOfLiftList(unsigned int addr, unsigned int net, unsigned int devType);
 
 private:
-    int indexOfLiftList(QHostAddress ip, unsigned int addr, unsigned int net, unsigned int devType);
+
     void cpdProcessing(int index, QVector<Gcpd> &cpd);
 
 
