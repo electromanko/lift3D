@@ -197,6 +197,11 @@ int Lifter::indexOfLiftList(unsigned int addr, unsigned int net, unsigned int de
     return -1;
 }
 
+void Lifter::eventNewLift(Lift *lift)
+{
+    qDebug("Lift: add nw lift");
+}
+
 void Lifter::datagramReceive(QHostAddress ip, GDatagram datagram)
 {
     qDebug() << "Lifter:receive:datgram="<< datagram.toString();
@@ -205,6 +210,7 @@ void Lifter::datagramReceive(QHostAddress ip, GDatagram datagram)
     if (index<0){
         Lift* lift = new Lift(ip, datagram.addrFrom, datagram.netFrom,datagram.devType);
         this->liftList.append(lift);
+        eventNewLift(lift);
         emit addedLiftToList(this->liftList.indexOf(lift),1);
     }
     else {

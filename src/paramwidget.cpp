@@ -270,6 +270,9 @@ bool ParamWidget::eventFilter(QObject *target, QEvent *event)
             case Qt::Key_X:
                 moveTimer->stop();
                 return true;
+            case Qt::Key_D:
+                lifter->moveDirect3d(QVector3D(1000,1500,0));
+                return true;
             }
         } else if (event->type() == QEvent::KeyRelease) {
             QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);

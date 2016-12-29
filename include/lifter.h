@@ -51,6 +51,7 @@ public:
     int getLiftCount();
     Lift* getLift(int i);
     void clearLiftList();
+     virtual void eventNewLift(Lift* lift);
 
 protected:
     unsigned int selfAddr;
@@ -60,6 +61,7 @@ protected:
     GnetRaw *gnet;
     int indexOfLiftList(QHostAddress ip, unsigned int addr, unsigned int net, unsigned int devType);
     int indexOfLiftList(unsigned int addr, unsigned int net, unsigned int devType);
+
 
 private:
 
