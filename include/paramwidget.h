@@ -2,7 +2,8 @@
 #define PARAMWIDGET_H
 
 #include "gnetraw.h"
-#include "lifter.h"
+//#include "lifter.h"
+#include "lifter3d.h"
 #include "lifttable.h"
 
 #include <QTableView>
@@ -30,7 +31,7 @@ public:
     bool eventFilter(QObject *target, QEvent *event);
 private:
     GnetRaw *gnet;
-    Lifter *lifter;
+    Lifter3d *lifter;
     void adjustLiftTableSize();
 signals:
 

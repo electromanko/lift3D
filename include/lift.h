@@ -4,6 +4,7 @@
 #include "gnetraw.h"
 
 #include <QObject>
+#include <QVector3D>
 
 class Lift : public QObject
 {
@@ -38,6 +39,8 @@ public:
     bool padked;
     unsigned char pkState;
 
+    QVector3D basePos3d;
+    int lenghtCableRelease;
 signals:
 
 public slots:

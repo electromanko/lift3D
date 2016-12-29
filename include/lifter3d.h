@@ -8,9 +8,15 @@ class Lifter3d : public Lifter
 {
 public:
     Lifter3d(unsigned int selfAddr=0, unsigned int selfNet=0,unsigned int selfDevType=0, QObject *parent = 0);
-    void moveDirection3d(QVector3D vector);
+    ~Lifter3d();
+    void moveDirect3d(const QVector3D &vector);
 private:
-    QList<QPair<Lift*, QVector3D*>> vectorList;
+    QList<Lift*> liftList3d;
 };
 
+class LiftData3d
+{
+public:
+
+};
 #endif // LIFTER3D_H

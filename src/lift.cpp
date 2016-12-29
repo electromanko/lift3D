@@ -20,7 +20,7 @@ Lift::Lift(QHostAddress ip,unsigned int selfAddr, unsigned int selfNet, unsigned
     this->padked=false;
 
     pkState=hcState=hlState=0;
-
+    lenghtCableRelease=0;
 }
 
 Lift::~Lift()

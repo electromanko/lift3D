@@ -10,8 +10,7 @@
 
 ParamWidget::ParamWidget(QWidget *parent) : QWidget(parent)
 {
-    //gnet = new GnetRaw();
-    lifter = new Lifter(15,0,32);
+    lifter = new Lifter3d(15,0,32,this);
     liftTableView = new QTableView();
 
     upButton = new QPushButton(tr("&Up"));
@@ -80,11 +79,11 @@ ParamWidget::ParamWidget(QWidget *parent) : QWidget(parent)
 
     connect(lifter,SIGNAL(liftUpdated(int)),
             liftTableModel, SLOT(liftUpdate(int)));
+    //this->dumpObjectTree();
 }
 
 ParamWidget::~ParamWidget()
 {
-    delete lifter;
 }
 
 void ParamWidget::upDemand()

@@ -20,6 +20,7 @@ Lifter::~Lifter()
     qDeleteAll(liftList);
     liftList.clear();
     delete gnet;
+    qDebug("delete lifter");
 }
 
 void Lifter::findLifts()
@@ -126,6 +127,18 @@ void Lifter::goRaw(int num, int height)
         GDatagram datagram(0,selfAddr,selfNet,lift->addr, lift->net,selfDevType);
         datagram.appendCpd(Gcpd (CMD_WRITE_0B,PORT_POS_RAW,(unsigned char)(height>>8)));
         datagram.appendCpd(Gcpd (CMD_WRITE_1B,PORT_POS_RAW,(unsigned char)(height&0xFF)));
+
+        gnet->sendGDatagram(datagram);
+
+    }
+}
+
+void Lifter::goRaw(Lift* lift, int lenght)
+{
+    if(lift !=NULL){
+        GDatagram datagram(0,selfAddr,selfNet,lift->addr, lift->net,selfDevType);
+        datagram.appendCpd(Gcpd (CMD_WRITE_0B,PORT_POS_RAW,(unsigned char)(lenght>>8)));
+        datagram.appendCpd(Gcpd (CMD_WRITE_1B,PORT_POS_RAW,(unsigned char)(lenght&0xFF)));
 
         gnet->sendGDatagram(datagram);
 

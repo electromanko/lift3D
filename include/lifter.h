@@ -46,6 +46,7 @@ public:
     void goMm(int num, int height);
     void goMm75(int num, int height);
     void goRaw(int num, int height);
+    void goRaw(Lift* lift, int lenght);
     void sendCmd(int num, QVector<Gcpd> &cpd);
     int getLiftCount();
     Lift* getLift(int i);
