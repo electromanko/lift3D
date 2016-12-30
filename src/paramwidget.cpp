@@ -10,6 +10,9 @@
 
 ParamWidget::ParamWidget(QWidget *parent) : QWidget(parent)
 {
+    posCursor3d.setX(500);
+    posCursor3d.setY(500);
+    posCursor3d.setZ(500);
     lifter = new Lifter3d(15,0,32,this);
     liftTableView = new QTableView();
 
@@ -270,8 +273,29 @@ bool ParamWidget::eventFilter(QObject *target, QEvent *event)
             case Qt::Key_X:
                 moveTimer->stop();
                 return true;
-            case Qt::Key_D:
-                lifter->moveDirect3d(QVector3D(1000,1500,0));
+            case Qt::Key_6:
+                posCursor3d.setX(posCursor3d.x()+50);
+                lifter->moveDirect3d(posCursor3d);
+                return true;
+            case Qt::Key_4:
+                posCursor3d.setX(posCursor3d.x()-50);
+                lifter->moveDirect3d(posCursor3d);
+                return true;
+            case Qt::Key_8:
+                posCursor3d.setZ(posCursor3d.z()+50);
+                lifter->moveDirect3d(posCursor3d);
+                return true;
+            case Qt::Key_2:
+                posCursor3d.setZ(posCursor3d.z()-50);
+                lifter->moveDirect3d(posCursor3d);
+                return true;
+            case Qt::Key_9:
+                posCursor3d.setY(posCursor3d.y()+50);
+                lifter->moveDirect3d(posCursor3d);
+                return true;
+            case Qt::Key_3:
+                posCursor3d.setY(posCursor3d.y()-50);
+                lifter->moveDirect3d(posCursor3d);
                 return true;
             }
         } else if (event->type() == QEvent::KeyRelease) {

@@ -33,6 +33,8 @@ private:
     GnetRaw *gnet;
     Lifter3d *lifter;
     void adjustLiftTableSize();
+    QVector3D posCursor3d;
+
 signals:
 
 public slots:

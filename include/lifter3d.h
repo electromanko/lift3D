@@ -18,11 +18,11 @@ protected:
 private:
     QList<Lift*> liftList3d;
     void addLift3d(Lift* lift, int num, const QVector3D &base, int len);
-    const int iLift[3]={31,8,30};
+    const int iLift[3]={31,22,30};
     const int xLift[3]={0,430,1440};//{0,2300,0};
     const int yLift[3]={2300,2140,2300};//{1440,2300,0};
     const int zLift[3]={0,1440,0};//{430,2140,1440};
-    const int lLift[3]={1080,980,1100};
+    const int lLift[3]={1060,1100,1000};
 };
 
 
