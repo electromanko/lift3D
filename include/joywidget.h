@@ -1,13 +1,15 @@
 #ifndef JOYWIDGET_H
 #define JOYWIDGET_H
 
+#include <QPushButton>
 #include <QWidget>
 
-class joywidget : public QWidget
+
+class Joywidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit joywidget(QWidget *parent = 0);
+    explicit Joywidget(QWidget *parent = 0);
     QPushButton *xpButton;
     QPushButton *xmButton;
     QPushButton *ypButton;

@@ -1,11 +1,14 @@
 #include "include/joywidget.h"
 
-joywidget::joywidget(QWidget *parent) : QWidget(parent)
+#include <QGridLayout>
+
+Joywidget::Joywidget(QWidget *parent) : QWidget(parent)
 {
      QGridLayout *mainLayout = new QGridLayout;
 
      xpButton = new QPushButton(tr("&x+"));
      xpButton->setFocusPolicy(Qt::NoFocus);
+     xpButton->setGeometry(QRect(0,0,10,10));
 
 
      xmButton = new QPushButton(tr("&x-"));
@@ -23,12 +26,12 @@ joywidget::joywidget(QWidget *parent) : QWidget(parent)
      zmButton = new QPushButton(tr("&z-"));
      zmButton->setFocusPolicy(Qt::NoFocus);
 
-     mainLayout->addWidget(xpButton, 2,0);
-     mainLayout->addWidget(xmButton, 2,0);
-     mainLayout->addWidget(ypButton, 2,0);
-     mainLayout->addWidget(ymButton, 2,0);
-     mainLayout->addWidget(zpButton, 2,0);
-     mainLayout->addWidget(zmButton, 2,0);
+     mainLayout->addWidget(xpButton, 1,2);
+     mainLayout->addWidget(xmButton, 1,0);
+     mainLayout->addWidget(ypButton, 0,1);
+     mainLayout->addWidget(ymButton, 2,1);
+     mainLayout->addWidget(zpButton, 0,2);
+     mainLayout->addWidget(zmButton, 2,2);
 
      setLayout(mainLayout);
 }

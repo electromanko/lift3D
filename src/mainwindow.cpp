@@ -3,6 +3,7 @@
 #include <QPushButton>
 #include <QHBoxLayout>
 #include <QSplitter>
+#include <include/joywidget.h>
 #include "include/mainwindow.h"
 #include "include/glwidget.h"
 
@@ -17,10 +18,13 @@ MainWindow::MainWindow(QWidget *parent) :
 
     glwidget =new GlWidget();
     paramwidget = new ParamWidget();
+    joywidget = new Joywidget();
+
     QSplitter *hSplitter = new QSplitter(centralWidget);
     hSplitter->setOrientation(Qt::Horizontal);
     hSplitter->addWidget(glwidget);
     hSplitter->addWidget(paramwidget);
+    hSplitter->addWidget(joywidget);
 
     mainLayout->addWidget(hSplitter);
      //mainLayout->addWidget(glwidget);

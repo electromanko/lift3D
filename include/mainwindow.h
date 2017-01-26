@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include "glwidget.h"
+#include "joywidget.h"
 #include "paramwidget.h"
 
 #include <QMainWindow>
@@ -17,6 +18,7 @@ class MainWindow : public QMainWindow
     QWidget *centralWidget;
     GlWidget *glwidget;
     ParamWidget *paramwidget;
+    Joywidget *joywidget;
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
