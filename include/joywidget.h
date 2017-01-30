@@ -1,7 +1,9 @@
 #ifndef JOYWIDGET_H
 #define JOYWIDGET_H
 
+#include <QLabel>
 #include <QPushButton>
+#include <QTextEdit>
 #include <QWidget>
 
 
@@ -16,6 +18,7 @@ public:
     QPushButton *ymButton;
     QPushButton *zpButton;
     QPushButton *zmButton;
+
 
 signals:
 

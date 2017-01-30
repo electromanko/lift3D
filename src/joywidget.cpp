@@ -6,6 +6,8 @@ Joywidget::Joywidget(QWidget *parent) : QWidget(parent)
 {
      QGridLayout *mainLayout = new QGridLayout;
 
+
+
      xpButton = new QPushButton(tr("&x+"));
      xpButton->setFocusPolicy(Qt::NoFocus);
      xpButton->setGeometry(QRect(0,0,10,10));
@@ -32,6 +34,7 @@ Joywidget::Joywidget(QWidget *parent) : QWidget(parent)
      mainLayout->addWidget(ymButton, 2,1);
      mainLayout->addWidget(zpButton, 0,2);
      mainLayout->addWidget(zmButton, 2,2);
+
 
      setLayout(mainLayout);
 }

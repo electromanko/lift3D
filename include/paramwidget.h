@@ -10,11 +10,17 @@
 #include <QPushButton>
 #include <QWidget>
 #include <QTimer>
+#include <QLabel>
 
 class ParamWidget : public QWidget
 {
     Q_OBJECT
 public:
+    const int move3DdeltaPosition=5;
+    const int move3DTime=100;
+
+    enum {MOVE_STOP=0,MOVE_XP,MOVE_XM,MOVE_YP,MOVE_YM,MOVE_ZP,MOVE_ZM,MOVE_GOTO} move3DFlag;
+
     explicit ParamWidget(QWidget *parent = 0);
     virtual ~ParamWidget();
     QTableView  *liftTableView;
@@ -29,6 +35,12 @@ public:
     bool timerStartFlag;
 
     bool eventFilter(QObject *target, QEvent *event);
+
+    QLabel *xLabel;
+    QLabel *yLabel;
+    QLabel *zLabel;
+
+
 private:
     GnetRaw *gnet;
     Lifter3d *lifter;

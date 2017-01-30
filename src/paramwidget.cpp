@@ -10,10 +10,16 @@
 
 ParamWidget::ParamWidget(QWidget *parent) : QWidget(parent)
 {
+    move3DFlag=MOVE_STOP;
     posCursor3d.setX(500);
     posCursor3d.setY(500);
     posCursor3d.setZ(500);
     lifter = new Lifter3d(15,0,32,this);
+
+    xLabel = new QLabel();
+    yLabel = new QLabel();
+    zLabel = new QLabel();
+
     liftTableView = new QTableView();
 
     upButton = new QPushButton(tr("&Up"));
@@ -57,6 +63,10 @@ ParamWidget::ParamWidget(QWidget *parent) : QWidget(parent)
     mainLayout->addWidget(parkButton, 4,0);
     mainLayout->addWidget(heightSlider,5,0);
 
+    mainLayout->addWidget(xLabel,6,0);
+    mainLayout->addWidget(yLabel,7,0);
+    mainLayout->addWidget(zLabel,8,0);
+
     adjustLiftTableSize();
     setLayout(mainLayout);
 
@@ -83,6 +93,8 @@ ParamWidget::ParamWidget(QWidget *parent) : QWidget(parent)
     connect(lifter,SIGNAL(liftUpdated(int)),
             liftTableModel, SLOT(liftUpdate(int)));
     //this->dumpObjectTree();
+    moveTimer->start(move3DTime);
+
 }
 
 ParamWidget::~ParamWidget()
@@ -209,7 +221,7 @@ void ParamWidget::goSlider(int value){
 
 void ParamWidget::moveTimerTimeout()
 {
-    static int value;
+    /*static int value;
     if (this->timerStartFlag) {
         value=0;
         timerStartFlag=0;
@@ -219,6 +231,37 @@ void ParamWidget::moveTimerTimeout()
     QList<QModelIndex>::iterator i;
     for (i=list.begin();i!=list.end();++i){
         lifter->goRaw(i->row(), value);
+    }*/
+    if(move3DFlag==MOVE_STOP){}
+    else
+    {switch (move3DFlag){
+    case MOVE_XP:
+        posCursor3d.setX(posCursor3d.x()+move3DdeltaPosition);
+        break;
+    case MOVE_XM:
+        posCursor3d.setX(posCursor3d.x()-move3DdeltaPosition);
+        break;
+    case MOVE_YP:
+            posCursor3d.setY(posCursor3d.y()+move3DdeltaPosition);
+        break;
+    case MOVE_YM:
+            posCursor3d.setY(posCursor3d.y()-move3DdeltaPosition);
+        break;
+    case MOVE_ZP:
+            posCursor3d.setZ(posCursor3d.z()+move3DdeltaPosition);
+        break;
+    case MOVE_ZM:
+            posCursor3d.setZ(posCursor3d.z()-move3DdeltaPosition);
+        break;
+    case MOVE_GOTO:
+        break;
+
+    }
+    xLabel->setText(QString::number(posCursor3d.x()));
+    yLabel->setText(QString::number(posCursor3d.y()));
+    zLabel->setText(QString::number(posCursor3d.z()));
+
+    lifter->moveDirect3d(posCursor3d);
     }
 }
 
@@ -267,35 +310,28 @@ bool ParamWidget::eventFilter(QObject *target, QEvent *event)
                 sendCmd();
                 return true;
             case Qt::Key_Z:
-                this->timerStartFlag=true;
-                moveTimer->start(10);
+
                 return true;
             case Qt::Key_X:
-                moveTimer->stop();
+
                 return true;
             case Qt::Key_6:
-                posCursor3d.setX(posCursor3d.x()+50);
-                lifter->moveDirect3d(posCursor3d);
+                move3DFlag=MOVE_XP;
                 return true;
             case Qt::Key_4:
-                posCursor3d.setX(posCursor3d.x()-50);
-                lifter->moveDirect3d(posCursor3d);
+                move3DFlag=MOVE_XM;
                 return true;
             case Qt::Key_8:
-                posCursor3d.setZ(posCursor3d.z()+50);
-                lifter->moveDirect3d(posCursor3d);
+                move3DFlag=MOVE_YP;
                 return true;
             case Qt::Key_2:
-                posCursor3d.setZ(posCursor3d.z()-50);
-                lifter->moveDirect3d(posCursor3d);
+                move3DFlag=MOVE_YM;
                 return true;
             case Qt::Key_9:
-                posCursor3d.setY(posCursor3d.y()+50);
-                lifter->moveDirect3d(posCursor3d);
+                move3DFlag=MOVE_ZP;
                 return true;
             case Qt::Key_3:
-                posCursor3d.setY(posCursor3d.y()-50);
-                lifter->moveDirect3d(posCursor3d);
+                move3DFlag=MOVE_ZM;
                 return true;
             }
         } else if (event->type() == QEvent::KeyRelease) {
@@ -304,6 +340,13 @@ bool ParamWidget::eventFilter(QObject *target, QEvent *event)
             switch (keyEvent->key()){
             case Qt::Key_W:
             case Qt::Key_S:
+                case Qt::Key_6:
+                case Qt::Key_4:
+                case Qt::Key_8:
+                case Qt::Key_2:
+                case Qt::Key_9:
+                case Qt::Key_3:
+                move3DFlag=MOVE_STOP;
                 stopMove();
                 return true;
             }
