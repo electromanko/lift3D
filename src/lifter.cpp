@@ -83,6 +83,16 @@ void Lifter::goPark(int num)
     }
 }
 
+void Lifter::goPark(Lift *lift)
+{
+
+    if(lift!=NULL){
+        GDatagram datagram(0,selfAddr,selfNet,lift->addr, lift->net,selfDevType);
+        datagram.appendCpd(Gcpd (CMD_WRITE,PORT_PARK,1));
+        gnet->sendGDatagram(datagram);
+    }
+}
+
 void Lifter::goMm(int num, int height)
 {
     Lift* lift;
@@ -154,8 +164,6 @@ void Lifter::sendCmd(int num, QVector<Gcpd> &cpd)
         GDatagram datagram(0,selfAddr,selfNet,lift->addr, lift->net,selfDevType, cpd);
         //datagram.appendCpd(Gcpd (CMD_WRITE_1B,PORT_POSITION,cm));
         gnet->sendGDatagram(datagram);
-
-
     }
 }
 

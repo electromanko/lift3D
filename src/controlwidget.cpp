@@ -1,4 +1,4 @@
-#include "include/paramwidget.h"
+#include "include/controlwidget.h"
 #include "include/cmddialog.h"
 
 #include <QGridLayout>
@@ -8,13 +8,13 @@
 #include <QInputDialog>
 
 
-ParamWidget::ParamWidget(QWidget *parent) : QWidget(parent)
+ControlWidget::ControlWidget (Lifter *lifter, QWidget *parent) : QWidget(parent)
 {
     move3DFlag=MOVE_STOP;
-    posCursor3d.setX(500);
-    posCursor3d.setY(500);
-    posCursor3d.setZ(500);
-    lifter = new Lifter3d(15,0,32,this);
+    //posCursor3d.setX(500);
+    //posCursor3d.setY(500);
+    //posCursor3d.setZ(500);
+    this->lifter = lifter;
 
     xLabel = new QLabel();
     yLabel = new QLabel();
@@ -49,12 +49,11 @@ ParamWidget::ParamWidget(QWidget *parent) : QWidget(parent)
     verticalHeader->setDefaultSectionSize(24);
     liftTableView->setSelectionBehavior(QAbstractItemView::SelectRows);
     liftTableView->verticalHeader()->hide();
-    liftTableView->installEventFilter(this);
+    //liftTableView->installEventFilter(this);
     liftTableView->setShowGrid(false);
 
     moveTimer = new QTimer(this);
     connect(moveTimer, SIGNAL(timeout()), this, SLOT(moveTimerTimeout()));
-
 
     mainLayout->addWidget(liftTableView, 0,0);
     mainLayout->addWidget(findButton, 1,0);
@@ -97,11 +96,11 @@ ParamWidget::ParamWidget(QWidget *parent) : QWidget(parent)
 
 }
 
-ParamWidget::~ParamWidget()
+ControlWidget::~ControlWidget()
 {
 }
 
-void ParamWidget::upDemand()
+void ControlWidget::upDemand()
 {
    /* GDatagram datagram(0,10,0,30,0,32);
     datagram.appendCpd(Gcpd(1,35,1));
@@ -123,7 +122,7 @@ void ParamWidget::upDemand()
     qDebug("upDemand");// << QString("star");
 }
 
-void ParamWidget::downDemand()
+void ControlWidget::downDemand()
 {
     /*QVector<Gcpd> cpd;
     cpd.append(Gcpd(1,36,1));
@@ -148,7 +147,7 @@ void ParamWidget::downDemand()
     qDebug("downDemand"); //<< QString("finish");
 }
 
-void ParamWidget::stopMove()
+void ControlWidget::stopMove()
 {
     /*QVector<Gcpd> cpd;
     cpd.append(Gcpd(1,37,1));
@@ -172,17 +171,17 @@ void ParamWidget::stopMove()
     qDebug("stop"); //<< QString("finish");
 }
 
-void ParamWidget::stopAll()
+void ControlWidget::stopAll()
 {
  lifter->stopAll();
 }
 
-void ParamWidget::findLift()
+void ControlWidget::findLift()
 {
     lifter->findLifts();
 }
 
-void ParamWidget::park()
+void ControlWidget::park()
 {
     QList<QModelIndex> list=liftTableView->selectionModel()->selectedRows();
     QList<QModelIndex>::iterator i;
@@ -193,7 +192,7 @@ void ParamWidget::park()
 
 }
 
-void ParamWidget::goTo()
+void ControlWidget::goTo()
 {
     bool ok;
     int hmm = QInputDialog::getInt(this, tr("Go"),
@@ -209,7 +208,7 @@ void ParamWidget::goTo()
     }
 }
 
-void ParamWidget::goSlider(int value){
+void ControlWidget::goSlider(int value){
     qDebug() << value;
     int hmm=value;
     QList<QModelIndex> list=liftTableView->selectionModel()->selectedRows();
@@ -219,19 +218,8 @@ void ParamWidget::goSlider(int value){
     }
 }
 
-void ParamWidget::moveTimerTimeout()
+void ControlWidget::moveTimerTimeout()
 {
-    /*static int value;
-    if (this->timerStartFlag) {
-        value=0;
-        timerStartFlag=0;
-    }
-    value+=1;
-    QList<QModelIndex> list=liftTableView->selectionModel()->selectedRows();
-    QList<QModelIndex>::iterator i;
-    for (i=list.begin();i!=list.end();++i){
-        lifter->goRaw(i->row(), value);
-    }*/
     if(move3DFlag==MOVE_STOP){}
     else
     {switch (move3DFlag){
@@ -261,11 +249,11 @@ void ParamWidget::moveTimerTimeout()
     yLabel->setText(QString::number(posCursor3d.y()));
     zLabel->setText(QString::number(posCursor3d.z()));
 
-    lifter->moveDirect3d(posCursor3d);
+    //lifter->moveDirect3d(posCursor3d);
     }
 }
 
-void ParamWidget::sendCmd(){
+void ControlWidget::sendCmd(){
    CmdDialog dialog(this);
 
    if (dialog.exec() == QDialog::Accepted ) {
@@ -279,8 +267,8 @@ void ParamWidget::sendCmd(){
         }
       }
 }
-
-bool ParamWidget::eventFilter(QObject *target, QEvent *event)
+/*
+bool ControlWidget::eventFilter(QObject *target, QEvent *event)
 {
 
         if (event->type() == QEvent::KeyPress) {
@@ -313,25 +301,6 @@ bool ParamWidget::eventFilter(QObject *target, QEvent *event)
 
                 return true;
             case Qt::Key_X:
-
-                return true;
-            case Qt::Key_6:
-                move3DFlag=MOVE_XP;
-                return true;
-            case Qt::Key_4:
-                move3DFlag=MOVE_XM;
-                return true;
-            case Qt::Key_8:
-                move3DFlag=MOVE_YP;
-                return true;
-            case Qt::Key_2:
-                move3DFlag=MOVE_YM;
-                return true;
-            case Qt::Key_9:
-                move3DFlag=MOVE_ZP;
-                return true;
-            case Qt::Key_3:
-                move3DFlag=MOVE_ZM;
                 return true;
             }
         } else if (event->type() == QEvent::KeyRelease) {
@@ -340,12 +309,6 @@ bool ParamWidget::eventFilter(QObject *target, QEvent *event)
             switch (keyEvent->key()){
             case Qt::Key_W:
             case Qt::Key_S:
-                case Qt::Key_6:
-                case Qt::Key_4:
-                case Qt::Key_8:
-                case Qt::Key_2:
-                case Qt::Key_9:
-                case Qt::Key_3:
                 move3DFlag=MOVE_STOP;
                 stopMove();
                 return true;
@@ -354,8 +317,8 @@ bool ParamWidget::eventFilter(QObject *target, QEvent *event)
 
     return QObject::eventFilter(target, event);
 }
-
-void ParamWidget::adjustLiftTableSize()
+*/
+void ControlWidget::adjustLiftTableSize()
 {
     liftTableView->resizeColumnToContents(1);
     liftTableView->resizeColumnToContents(2);

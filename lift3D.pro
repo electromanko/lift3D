@@ -16,7 +16,6 @@ SOURCES += src/main.cpp\
            src/mainwindow.cpp\
            src/glwidget.cpp\
            src/geometryengine.cpp \
-            src/paramwidget.cpp \
             src/geometry_kernel.cpp \
             src/geometry_element.cpp \
             src/geometry_unit.cpp \
@@ -26,12 +25,13 @@ SOURCES += src/main.cpp\
     src/lifttable.cpp \
     src/cmddialog.cpp \
     src/lifter3d.cpp \
-    src/joywidget.cpp
+    src/joywidget.cpp \
+    src/controlwidget.cpp \
+    src/liftconfig.cpp
 
 HEADERS  += include/mainwindow.h\
             include/glwidget.h\
             include/geometryengine.h \
-            include/paramwidget.h \
             include/geometry_kernel.h \
             include/geometry_element.h \
             include/geometry_unit.h \
@@ -41,14 +41,18 @@ HEADERS  += include/mainwindow.h\
             include/lifttable.h \
     include/cmddialog.h \
     include/lifter3d.h \
-    include/joywidget.h
+    include/joywidget.h \
+    include/controlwidget.h \
+    include/liftconfig.h
 
 FORMS    += form/mainwindow.ui
 
 RESOURCES += \
     res/shaders.qrc \
-    res/textures.qrc
+    res/textures.qrc \
+    res/icon.qrc
     res/cube.png
 
-DISTFILES +=
+DISTFILES += \
+    config.gc
 

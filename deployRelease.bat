@@ -1,0 +1,1 @@
+windeployqt --quick ../build-lift3D-Desktop_Qt_5_8_0_MinGW_32bit-Release/release/lift3D.exe

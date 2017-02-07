@@ -12,7 +12,7 @@
 #include <QTimer>
 #include <QLabel>
 
-class ParamWidget : public QWidget
+class ControlWidget : public QWidget
 {
     Q_OBJECT
 public:
@@ -21,8 +21,8 @@ public:
 
     enum {MOVE_STOP=0,MOVE_XP,MOVE_XM,MOVE_YP,MOVE_YM,MOVE_ZP,MOVE_ZM,MOVE_GOTO} move3DFlag;
 
-    explicit ParamWidget(QWidget *parent = 0);
-    virtual ~ParamWidget();
+    explicit ControlWidget(Lifter *lifter, QWidget *parent = 0);
+    virtual ~ControlWidget();
     QTableView  *liftTableView;
     LiftTable *liftTableModel;
     QPushButton *upButton;
@@ -34,16 +34,15 @@ public:
 
     bool timerStartFlag;
 
-    bool eventFilter(QObject *target, QEvent *event);
+    //bool eventFilter(QObject *target, QEvent *event);
 
     QLabel *xLabel;
     QLabel *yLabel;
     QLabel *zLabel;
 
-
 private:
     GnetRaw *gnet;
-    Lifter3d *lifter;
+    Lifter *lifter;
     void adjustLiftTableSize();
     QVector3D posCursor3d;
 

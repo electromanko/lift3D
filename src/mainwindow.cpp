@@ -13,17 +13,28 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
 {
+    QFile c("./config.gc");//../Lift3D/config.gc
+    if (!config.load(c)) {
+        QErrorMessage errorMessage;
+        errorMessage.showMessage(tr("Error cofig file"));
+        errorMessage.exec();
+    }
+    lifter3D = new Lifter3d(config.limitCubePoint0,config.limitCubePoint1,config.lifterAddr,config.lifterNet,
+                            config.lifterDevType,this);
+    foreach (lift3DConf conf, config.lift3DList) {
+        lifter3D->addLift3d(conf.addr,conf.net,conf.lZero,conf.lEnd,conf.pos);
+    }
     centralWidget = new QWidget(this);
     QHBoxLayout *mainLayout = new QHBoxLayout();
 
-    glwidget =new GlWidget();
-    paramwidget = new ParamWidget();
-    joywidget = new Joywidget();
+    //glwidget =new GlWidget(this);
+    controlwidget = new ControlWidget(lifter3D, this);
+    joywidget = new Joywidget(lifter3D, config.iconSize, config.move3dDeltaPosition, config.move3dTime, this);
 
     QSplitter *hSplitter = new QSplitter(centralWidget);
     hSplitter->setOrientation(Qt::Horizontal);
-    hSplitter->addWidget(glwidget);
-    hSplitter->addWidget(paramwidget);
+    //hSplitter->addWidget(glwidget);
+    //hSplitter->addWidget(controlwidget);
     hSplitter->addWidget(joywidget);
 
     mainLayout->addWidget(hSplitter);
@@ -39,11 +50,12 @@ MainWindow::MainWindow(QWidget *parent) :
     createActions();
     createMenus();
 
+    installEventFilter(this);
 }
 
 MainWindow::~MainWindow()
 {
-    delete glwidget;
+    //delete glwidget;
 }
 
 void MainWindow::createActions(){
@@ -77,3 +89,74 @@ void MainWindow::contextMenuEvent(QContextMenuEvent *event)
     menu.exec(event->globalPos());
 }
 #endif // QT_NO_CONTEXTMENU
+
+bool MainWindow::eventFilter(QObject *target, QEvent *event)
+{
+        if (event->type() == QEvent::KeyPress) {
+            QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+            if (keyEvent->isAutoRepeat())return QObject::eventFilter(target, event);
+            switch (keyEvent->key()){
+            case Qt::Key_W:
+                controlwidget->upDemand();
+                return true;
+            case Qt::Key_S:
+                controlwidget->downDemand();
+                return true;
+            case Qt::Key_P:
+                controlwidget->park();
+                return true;
+            case Qt::Key_F:
+                controlwidget->findLift();
+                return true;
+            case Qt::Key_Space:
+                controlwidget->stopAll();
+                return true;
+            case Qt::Key_G:
+            case Qt::Key_Return:
+                controlwidget->goTo();
+                return true;
+            case Qt::Key_C:
+                controlwidget->sendCmd();
+                return true;
+            case Qt::Key_6:
+                joywidget->move3dFlag=Joywidget::MOVE_XP;
+                qDebug("key6");
+                return true;
+            case Qt::Key_4:
+                joywidget->move3dFlag=Joywidget::MOVE_XM;
+                return true;
+            case Qt::Key_8:
+                joywidget->move3dFlag=Joywidget::MOVE_YP;
+                return true;
+            case Qt::Key_2:
+                joywidget->move3dFlag=Joywidget::MOVE_YM;
+                return true;
+            case Qt::Key_9:
+                joywidget->move3dFlag=Joywidget::MOVE_ZP;
+                return true;
+            case Qt::Key_3:
+                joywidget->move3dFlag=Joywidget::MOVE_ZM;
+                return true;
+
+            }
+        } else if (event->type() == QEvent::KeyRelease) {
+            QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+            if (keyEvent->isAutoRepeat())return QObject::eventFilter(target, event);
+            switch (keyEvent->key()){
+            case Qt::Key_W:
+            case Qt::Key_S:
+            case Qt::Key_6:
+            case Qt::Key_4:
+            case Qt::Key_8:
+            case Qt::Key_2:
+            case Qt::Key_9:
+            case Qt::Key_3:
+                joywidget->move3dFlag=Joywidget::MOVE_STOP;
+                controlwidget->stopMove();
+                return true;
+            }
+        }
+
+    return QObject::eventFilter(target, event);
+}
+

@@ -1,0 +1,50 @@
+{
+  "iconSize": 64,
+  "debug": true,
+  "lifterAddr": 15,
+  "lifterNet": 0,
+  "lifterDevType": 32,
+  "limitCubePoint0": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+  },
+  "limitCubePoint1": {
+    "x": 4000,
+    "y": 4000,
+    "z": 4000
+  },
+
+  "move3dDeltaPosition": 5,
+  "move3dTime": 100,
+
+  "lift3D": [
+    {
+    "addr": 1,
+    "net": 0,
+    "lZero": 1000,
+    "lEnd": 10000,
+    "x": 0,
+    "y": 0,
+    "z": 5000
+    },
+    {
+    "addr": 2,
+    "net": 0,
+    "lZero": 1000,
+    "lEnd": 10000,
+    "x": 2500,
+    "y": 5000,
+    "z": 5000
+    },
+    {
+    "addr": 3,
+    "net": 0,
+    "lZero": 1000,
+    "lEnd": 10000,
+    "x": 5000,
+    "y": 0,
+    "z": 5000
+    }
+  ]
+}

@@ -10,6 +10,7 @@ class Lift : public QObject
 {
     Q_OBJECT
 public:
+    static const int  BASE_DEV_TYPE = 32;
     static const unsigned char  STATE_ACTUAL = (1<<0);
     static const unsigned char  STATE_UPDATE = (1<<1);
 
@@ -40,7 +41,8 @@ public:
     unsigned char pkState;
 
     QVector3D basePos3d;
-    int lenghtCableRelease;
+    int lenghtZero;
+    int lenghtEnd;
 signals:
 
 public slots:

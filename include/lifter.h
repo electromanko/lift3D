@@ -21,8 +21,6 @@ public:
     static const unsigned char CMD_INFO_0B=46;
     static const unsigned char CMD_INFO_1B=47;
 
-
-
     static const unsigned char PORT_FIND=1;
 
     static const unsigned char PORT_POSITION=32;
@@ -43,6 +41,7 @@ public:
     void stop(int num);
     void stopAll();
     void goPark(int num);
+    void goPark(Lift *lift);
     void goMm(int num, int height);
     void goMm75(int num, int height);
     void goRaw(int num, int height);
