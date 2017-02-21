@@ -56,3 +56,4 @@ RESOURCES += \
 DISTFILES += \
     config.gc
 
+#QMAKE_LFLAGS = -static -static-libgcc -static-libstdc++  -Wl,-enable-auto-import -Wl,-enable-runtime-pseudo-reloc

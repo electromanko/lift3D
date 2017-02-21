@@ -10,11 +10,15 @@ LiftConfig::LiftConfig(QObject *parent) : QObject(parent)
 }
 
 bool LiftConfig::load(QFile &configFile){
+    lifterAddr=lifterNet=lifterDevType=0;
+    move3dDeltaPosition=5;
+    move3dTime=100;
+    iconSize=64;
     if (!configFile.open(QIODevice::ReadOnly)) {
             qWarning("Couldn't open config file.");
             return false;
         }
-    QByteArray saveData = configFile.readAll();
+        QByteArray saveData = configFile.readAll();
 
         QJsonDocument configJson(QJsonDocument::fromJson(saveData));
 

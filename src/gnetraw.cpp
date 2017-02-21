@@ -1,4 +1,5 @@
 #include "include/gnetraw.h"
+#include <QNetworkInterface>
 
 GnetRaw::GnetRaw(QObject *parent) : QObject(parent)
 {
@@ -7,7 +8,12 @@ GnetRaw::GnetRaw(QObject *parent) : QObject(parent)
         if (address.protocol() == QAbstractSocket::IPv4Protocol && address != QHostAddress(QHostAddress::LocalHost))
              qDebug() <<"Self ip address: " << address.toString();
         selfAddress.append(address);
-    }
+    } 
+                    foreach (const QNetworkInterface &interface, QNetworkInterface::allInterfaces()) {
+                        //if (address.protocol() == QAbstractSocket::IPv4Protocol && address != QHostAddress(QHostAddress::LocalHost))
+                             qDebug() <<"Self interface: " << interface.humanReadableName() << interface.hardwareAddress();
+                        //selfAddress.append(address);
+                    }
 }
 
 

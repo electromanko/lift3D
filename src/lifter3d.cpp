@@ -27,9 +27,9 @@ bool Lifter3d::moveDirect3d(const QVector3D &vector)
     }
     foreach (Lift *lift, this->liftList3d){
         lenght = (int)lift->basePos3d.distanceToPoint(vector)-lift->lenghtZero;
-        lenght = lenght<0 ? 0 : lenght;
-        maxLenght = lift->lenghtEnd - lift->lenghtZero;
-        lenght = lenght> maxLenght ? maxLenght: lenght;
+        //lenght = lenght<0 ? 0 : lenght;
+        //maxLenght = lift->lenghtEnd - lift->lenghtZero;
+        //lenght = lenght> maxLenght ? maxLenght: lenght;
         this->goRaw(lift,lenght);
     }
     return true;
