@@ -35,9 +35,11 @@ private:
 
     void createActions();
     void createMenus();
+    void createDockWindows();
 
     QMenu *fileMenu;
     QMenu *helpMenu;
+    QMenu *viewMenu;
 
     QAction *actionQuit;
     QAction *actionAbout;
