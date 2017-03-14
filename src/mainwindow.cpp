@@ -61,7 +61,7 @@ void MainWindow::createActions(){
     actionQuit = new QAction(tr("&Quit"), this);
     actionQuit->setShortcuts(QKeySequence::Quit);
     actionQuit->setStatusTip(tr("Quit from app"));
-    //connect(quitAction, &QAction::triggered, this, &MainWindow::newFile);
+    connect(actionQuit, &QAction::triggered, this, &MainWindow::close);
 
     actionAbout = new QAction(tr("&About"), this);
     actionAbout->setShortcuts(QKeySequence::Cancel);
@@ -85,6 +85,7 @@ void MainWindow::createDockWindows(){
     //glwidget =new GlWidget(this);
     controlwidget = new ControlWidget(lifter3D, this);
     joywidget = new Joywidget(lifter3D, config.iconSize, config.move3dDeltaPosition, config.move3dTime, this);
+    iowidget = new IOwidget(this);
 
     QDockWidget *dock = new QDockWidget(tr("Control"), this);
     //dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
@@ -95,6 +96,12 @@ void MainWindow::createDockWindows(){
     dock = new QDockWidget(tr("Joystick"), this);
     //dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     dock->setWidget(joywidget);
+    addDockWidget(Qt::RightDockWidgetArea, dock);
+    viewMenu->addAction(dock->toggleViewAction());
+
+    dock = new QDockWidget(tr("IO"), this);
+    //dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+    dock->setWidget(iowidget);
     addDockWidget(Qt::RightDockWidgetArea, dock);
     viewMenu->addAction(dock->toggleViewAction());
 }

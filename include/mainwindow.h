@@ -5,6 +5,7 @@
 #include "joywidget.h"
 #include "controlwidget.h"
 #include "liftconfig.h"
+#include "iowidget.h"
 
 #include <QFile>
 #include <QMainWindow>
@@ -22,6 +23,7 @@ class MainWindow : public QMainWindow
     GlWidget *glwidget;
     ControlWidget *controlwidget;
     Joywidget *joywidget;
+    IOwidget *iowidget;
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();

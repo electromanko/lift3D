@@ -27,7 +27,8 @@ SOURCES += src/main.cpp\
     src/lifter3d.cpp \
     src/joywidget.cpp \
     src/controlwidget.cpp \
-    src/liftconfig.cpp
+    src/liftconfig.cpp \
+    src/iowidget.cpp
 
 HEADERS  += include/mainwindow.h\
             include/glwidget.h\
@@ -43,7 +44,8 @@ HEADERS  += include/mainwindow.h\
     include/lifter3d.h \
     include/joywidget.h \
     include/controlwidget.h \
-    include/liftconfig.h
+    include/liftconfig.h \
+    include/iowidget.h
 
 FORMS    += form/mainwindow.ui
 
