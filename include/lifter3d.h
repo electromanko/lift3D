@@ -7,7 +7,7 @@
 class Lifter3d : public Lifter
 {
 public:
-    Lifter3d(const QVector3D &limitCubePoint0, const QVector3D &limitCubePoint1,unsigned int selfAddr=0, unsigned int selfNet=0,unsigned int selfDevType=0,  QObject *parent = 0);
+    Lifter3d(GnetRaw* gnet, const QVector3D &limitCubePoint0, const QVector3D &limitCubePoint1,unsigned int selfAddr=0, unsigned int selfNet=0,unsigned int selfDevType=0,  QObject *parent = 0);
     ~Lifter3d();
     bool moveDirect3d(const QVector3D &vector);
     void eventNewLift(Lift* lift); //override

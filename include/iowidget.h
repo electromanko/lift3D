@@ -1,6 +1,8 @@
 #ifndef IOWIDGET_H
 #define IOWIDGET_H
 
+#include "gnetraw.h"
+
 #include <QTextEdit>
 #include <QWidget>
 
@@ -13,6 +15,8 @@ public:
 signals:
 
 public slots:
+    receivedDatagram (QHostAddress ip, GDatagram datagram);
+    sendedDatagram (GDatagram datagram);
 };
 
 #endif // IOWIDGET_H

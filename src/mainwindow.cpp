@@ -19,7 +19,8 @@ MainWindow::MainWindow(QWidget *parent) :
         errorMessage.showMessage(tr("Error cofig file"));
         errorMessage.exec();
     }
-    lifter3D = new Lifter3d(config.limitCubePoint0,config.limitCubePoint1,config.lifterAddr,config.lifterNet,
+    gnet = new GnetRaw();
+    lifter3D = new Lifter3d(gnet, config.limitCubePoint0,config.limitCubePoint1,config.lifterAddr,config.lifterNet,
                             config.lifterDevType,this);
     foreach (lift3DConf conf, config.lift3DList) {
         lifter3D->addLift3d(conf.addr,conf.net,conf.lZero,conf.lEnd,conf.pos);
@@ -55,6 +56,7 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     //delete glwidget;
+    delete gnet;
 }
 
 void MainWindow::createActions(){
@@ -83,9 +85,11 @@ void MainWindow::createMenus(){
 
 void MainWindow::createDockWindows(){
     //glwidget =new GlWidget(this);
+
     controlwidget = new ControlWidget(lifter3D, this);
     joywidget = new Joywidget(lifter3D, config.iconSize, config.move3dDeltaPosition, config.move3dTime, this);
     iowidget = new IOwidget(this);
+    connect(gnet, SIGNAL(received(QHostAddress, GDatagram)), iowidget, SLOT(receivedDatagram(QHostAddress, GDatagram)));
 
     QDockWidget *dock = new QDockWidget(tr("Control"), this);
     //dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);

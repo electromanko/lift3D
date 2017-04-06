@@ -18,6 +18,7 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
+    GnetRaw *gnet;
     Lifter3d *lifter3D;
     QWidget *centralWidget;
     GlWidget *glwidget;

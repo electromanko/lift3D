@@ -1,7 +1,7 @@
 #include "include/lifter3d.h"
 
-Lifter3d::Lifter3d(const QVector3D &limitCubePoint0, const QVector3D &limitCubePoint1, unsigned int selfAddr, unsigned int selfNet, unsigned int selfDevType,  QObject *parent)
-    : Lifter (selfAddr, selfNet, selfDevType, parent)
+Lifter3d::Lifter3d(GnetRaw* gnet, const QVector3D &limitCubePoint0, const QVector3D &limitCubePoint1, unsigned int selfAddr, unsigned int selfNet, unsigned int selfDevType,  QObject *parent)
+    : Lifter (gnet, selfAddr, selfNet, selfDevType, parent)
 {
     this->limitCubePoint0=limitCubePoint0;
     this->limitCubePoint1=limitCubePoint1;

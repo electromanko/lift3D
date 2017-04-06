@@ -5,12 +5,12 @@
 
 }*/
 
-Lifter::Lifter(unsigned int selfAddr, unsigned int selfNet , unsigned int selfDevType, QObject *parent) : QObject(parent)
+Lifter::Lifter(GnetRaw *gnet, unsigned int selfAddr, unsigned int selfNet , unsigned int selfDevType, QObject *parent) : QObject(parent)
 {
     this->selfAddr=selfAddr;
     this->selfNet=selfNet;
     this->selfDevType= selfDevType;
-    gnet= new GnetRaw();
+    this->gnet = gnet;
     connect(gnet, SIGNAL(received(QHostAddress, GDatagram)),
             this, SLOT(datagramReceive(QHostAddress, GDatagram)));
 }
@@ -19,7 +19,7 @@ Lifter::~Lifter()
 {
     qDeleteAll(liftList);
     liftList.clear();
-    delete gnet;
+
     qDebug("delete lifter");
 }
 
@@ -85,7 +85,6 @@ void Lifter::goPark(int num)
 
 void Lifter::goPark(Lift *lift)
 {
-
     if(lift!=NULL){
         GDatagram datagram(0,selfAddr,selfNet,lift->addr, lift->net,selfDevType);
         datagram.appendCpd(Gcpd (CMD_WRITE,PORT_PARK,1));
