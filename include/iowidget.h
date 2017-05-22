@@ -16,7 +16,7 @@ signals:
 
 public slots:
     receivedDatagram (QHostAddress ip, GDatagram datagram);
-    sendedDatagram (GDatagram datagram);
+    sendedDatagram(QHostAddress ip, GDatagram datagram);
 };
 
 #endif // IOWIDGET_H

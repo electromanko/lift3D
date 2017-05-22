@@ -90,6 +90,7 @@ void MainWindow::createDockWindows(){
     joywidget = new Joywidget(lifter3D, config.iconSize, config.move3dDeltaPosition, config.move3dTime, this);
     iowidget = new IOwidget(this);
     connect(gnet, SIGNAL(received(QHostAddress, GDatagram)), iowidget, SLOT(receivedDatagram(QHostAddress, GDatagram)));
+    connect(gnet, SIGNAL(sended(QHostAddress, GDatagram)), iowidget, SLOT(sendedDatagram(QHostAddress, GDatagram)));
 
     QDockWidget *dock = new QDockWidget(tr("Control"), this);
     //dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);

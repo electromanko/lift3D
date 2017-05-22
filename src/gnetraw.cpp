@@ -45,11 +45,14 @@ void GnetRaw::readPendingDatagrams()
                 break;
             }
         }
+        GDatagram dt = GDatagram(datagram);
+        dt.setDateStamp();
         if(selfA){
+            emit sended(sender, dt);
             qDebug() << "echo: " << sender.toString() << GDatagram(datagram).toString();
         }
         else {
-            emit received(sender, GDatagram(datagram));
+            emit received(sender, dt);
             qDebug() << "in: " << sender.toString() << datagram.toHex();
         }
     }
@@ -135,6 +138,16 @@ unsigned int GDatagram::getSize()
     return (GDatagram::DATAGRAM_SIZE+cpd.count()* Gcpd::CPD_SIZE + 1);
 }
 
+void GDatagram::setDateStamp()
+{
+    this->date = QDateTime::currentDateTimeUtc();
+}
+
+void GDatagram::setDateStamp(QDateTime t)
+{
+    this->date = t;
+}
+
 void GDatagram::appendCpd(const Gcpd &cpd)
 {
    this->cpd.append(cpd);
@@ -168,9 +181,10 @@ QByteArray GDatagram::toQByteArray()
 }
 
 QString GDatagram::toString()
-{
+{//.arg(this->date.toString())
     QString str;
-    str = QString("sz %1:n %2:af %3:nf %4:at %5:nt %6:dt %7:")\
+    str = QString("dt %1:sz %2:n %3:af %4:nf %5:at %6:nt %7:dt %8:")\
+            .arg(this->date.toString())\
             .arg(this->getSize()-1)\
             .arg(this->number)\
             .arg(this->addrFrom)\
@@ -189,7 +203,7 @@ QString GDatagram::toString()
 GDatagram::GDatagram(QByteArray array)
 {
    int size = array[0];
-   if ((size+1 == array.size()) || (array.size() <= GDatagram::DATAGRAM_SIZE+Gcpd::CPD_SIZE+1)){
+   if ((size+1 == array.size()) && (array.size() >= GDatagram::DATAGRAM_SIZE+Gcpd::CPD_SIZE+1)){
     this->number = array[3];
     this->addrFrom = array[1];
     this->netFrom = array[4];
@@ -201,5 +215,13 @@ GDatagram::GDatagram(QByteArray array)
         this->appendCpd(Gcpd(array[i],array[i+1], array[i+2]));
         }
 
+   } else {
+       this->number = 0;
+       this->addrFrom = 0;
+       this->netFrom = 0;
+       this->addrTo = 0;
+       this->netTo = 0;
+       this->devType = 0;
+       throw -1;
    }
 }

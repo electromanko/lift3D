@@ -5,6 +5,7 @@
 #include <QUdpSocket>
 #include <QByteArray>
 #include <QNetworkInterface>
+#include <QDateTime>
 
 class Gcpd;
 class GDatagram;
@@ -24,6 +25,7 @@ private:
     QVector<QHostAddress> selfAddress;
 signals:
     void received(QHostAddress ip, GDatagram datagram);
+    void sended(QHostAddress ip, GDatagram datagram);
 public slots:
     void readPendingDatagrams();
 
@@ -49,7 +51,7 @@ public:
     GDatagram(QByteArray array);
     ~GDatagram();
 
-
+    QDateTime date;
     unsigned char addrFrom;
     unsigned char netFrom;
     unsigned char addrTo;
@@ -57,8 +59,11 @@ public:
     unsigned char devType;
     unsigned char number;
     unsigned int getSize();
+    void setDateStamp();
+    void setDateStamp(QDateTime t);
     void appendCpd(const Gcpd &cpd);
     void clearCpd();
+
     QByteArray toQByteArray();
     QString toString();
 

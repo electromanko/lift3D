@@ -13,10 +13,10 @@ IOwidget::IOwidget(QWidget *parent) : QWidget(parent)
 
 IOwidget::receivedDatagram(QHostAddress ip, GDatagram datagram)
 {
-    textEdit->append(datagram.toString());
+    textEdit->append(QString("->")+datagram.toString());
 }
 
-IOwidget::sendedDatagram(GDatagram datagram)
+IOwidget::sendedDatagram(QHostAddress ip, GDatagram datagram)
 {
-
+    textEdit->append(QString("<-")+datagram.toString());
 }
