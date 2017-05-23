@@ -13,7 +13,7 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
 {
-    QFile c("../Lift3D/config.gc");//../Lift3D/config.gc./config.gc
+    QFile c("./config.gc");//../Lift3D/config.gc./config.gc
     if (!config.load(c)) {
         QErrorMessage errorMessage;
         errorMessage.showMessage(tr("Error cofig file"));
@@ -40,16 +40,16 @@ MainWindow::MainWindow(QWidget *parent) :
      //mainLayout->addWidget(glwidget);
      //mainLayout->addWidget(button1);
 
-    centralWidget->setLayout(mainLayout);
+    /*centralWidget->setLayout(mainLayout);
     //button1->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding) ;
     //centralWidget->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
     centralWidget->resize(400,400);
-    setCentralWidget(centralWidget);
+    setCentralWidget(centralWidget);*/
 
     createActions();
     createMenus();
-    createDockWindows();
-
+    //createDockWindows();
+    createSimpleWindows();
     installEventFilter(this);
 }
 
@@ -109,6 +109,37 @@ void MainWindow::createDockWindows(){
     dock->setWidget(iowidget);
     addDockWidget(Qt::RightDockWidgetArea, dock);
     viewMenu->addAction(dock->toggleViewAction());
+}
+
+void MainWindow::createSimpleWindows(){
+    //glwidget =new GlWidget(this);
+
+    controlwidget = new ControlWidget(lifter3D, this);
+    //joywidget = new Joywidget(lifter3D, config.iconSize, config.move3dDeltaPosition, config.move3dTime, this);
+    //iowidget = new IOwidget(this);
+    //connect(gnet, SIGNAL(received(QHostAddress, GDatagram)), iowidget, SLOT(receivedDatagram(QHostAddress, GDatagram)));
+    //connect(gnet, SIGNAL(sended(QHostAddress, GDatagram)), iowidget, SLOT(sendedDatagram(QHostAddress, GDatagram)));
+
+    /*QDockWidget *dock = new QDockWidget(tr("Control"), this);
+    //dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+    dock->setWidget(controlwidget);
+    addDockWidget(Qt::RightDockWidgetArea, dock);
+    viewMenu->addAction(dock->toggleViewAction());*/
+    QHBoxLayout *mainLayout = new QHBoxLayout();
+
+    QSplitter *hSplitter = new QSplitter(centralWidget);
+    hSplitter->setOrientation(Qt::Horizontal);
+    //hSplitter->addWidget(glwidget);
+    hSplitter->addWidget(controlwidget);
+    //hSplitter->addWidget(joywidget);
+
+    mainLayout->addWidget(hSplitter);
+     //mainLayout->addWidget(glwidget);
+     //mainLayout->addWidget(button1);
+
+    centralWidget->setLayout(mainLayout);
+    centralWidget->resize(400,400);
+    setCentralWidget(centralWidget);
 }
 
 #ifndef QT_NO_CONTEXTMENU

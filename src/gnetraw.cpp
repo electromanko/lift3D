@@ -222,6 +222,5 @@ GDatagram::GDatagram(QByteArray array)
        this->addrTo = 0;
        this->netTo = 0;
        this->devType = 0;
-       throw -1;
    }
 }

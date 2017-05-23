@@ -60,7 +60,7 @@ ControlWidget::ControlWidget (Lifter *lifter, QWidget *parent) : QWidget(parent)
     mainLayout->addWidget(upButton, 2,0);
     mainLayout->addWidget(downButton, 3,0);
     mainLayout->addWidget(parkButton, 4,0);
-    mainLayout->addWidget(heightSlider,5,0);
+    //mainLayout->addWidget(heightSlider,5,0);
 
     mainLayout->addWidget(xLabel,6,0);
     mainLayout->addWidget(yLabel,7,0);
