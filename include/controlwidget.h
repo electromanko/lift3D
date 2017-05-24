@@ -36,9 +36,9 @@ public:
 
     //bool eventFilter(QObject *target, QEvent *event);
 
-    QLabel *xLabel;
+    /*QLabel *xLabel;
     QLabel *yLabel;
-    QLabel *zLabel;
+    QLabel *zLabel;*/
 
 private:
     GnetRaw *gnet;
@@ -58,7 +58,7 @@ public slots:
     void goTo();
     void sendCmd();
     void goSlider(int value);
-    void moveTimerTimeout();
+    //void moveTimerTimeout();
 };
 
 #endif // PARAMWIDGET_H

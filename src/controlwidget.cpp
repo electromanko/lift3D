@@ -16,10 +16,6 @@ ControlWidget::ControlWidget (Lifter *lifter, QWidget *parent) : QWidget(parent)
     //posCursor3d.setZ(500);
     this->lifter = lifter;
 
-    xLabel = new QLabel();
-    yLabel = new QLabel();
-    zLabel = new QLabel();
-
     liftTableView = new QTableView();
 
     upButton = new QPushButton(tr("&Up"));
@@ -52,8 +48,8 @@ ControlWidget::ControlWidget (Lifter *lifter, QWidget *parent) : QWidget(parent)
     //liftTableView->installEventFilter(this);
     liftTableView->setShowGrid(false);
 
-    moveTimer = new QTimer(this);
-    connect(moveTimer, SIGNAL(timeout()), this, SLOT(moveTimerTimeout()));
+    /*moveTimer = new QTimer(this);
+    connect(moveTimer, SIGNAL(timeout()), this, SLOT(moveTimerTimeout()));*/
 
     mainLayout->addWidget(liftTableView, 0,0);
     mainLayout->addWidget(findButton, 1,0);
@@ -62,9 +58,6 @@ ControlWidget::ControlWidget (Lifter *lifter, QWidget *parent) : QWidget(parent)
     mainLayout->addWidget(parkButton, 4,0);
     //mainLayout->addWidget(heightSlider,5,0);
 
-    mainLayout->addWidget(xLabel,6,0);
-    mainLayout->addWidget(yLabel,7,0);
-    mainLayout->addWidget(zLabel,8,0);
 
     adjustLiftTableSize();
     setLayout(mainLayout);
@@ -92,7 +85,7 @@ ControlWidget::ControlWidget (Lifter *lifter, QWidget *parent) : QWidget(parent)
     connect(lifter,SIGNAL(liftUpdated(int)),
             liftTableModel, SLOT(liftUpdate(int)));
     //this->dumpObjectTree();
-    moveTimer->start(move3DTime);
+    //moveTimer->start(move3DTime);
 
 }
 
@@ -102,24 +95,12 @@ ControlWidget::~ControlWidget()
 
 void ControlWidget::upDemand()
 {
-   /* GDatagram datagram(0,10,0,30,0,32);
-    datagram.appendCpd(Gcpd(1,35,1));
-    //QVector<Gcpd> cpd;
-    //cpd.append(Gcpd(1,35,1));
-    //gnet->sendGDatagram(10,0,30,0,32,cpd);
-    //gnet->sendGDatagram(10,0,31,0,32,cpd);
-
-    gnet->sendGDatagram(datagram);
-    datagram.addrTo = 31;
-    gnet->sendGDatagram(datagram);*/
     QList<QModelIndex> list=liftTableView->selectionModel()->selectedRows();
     QList<QModelIndex>::iterator i;
     for (i=list.begin();i!=list.end();++i){
         lifter->upDemand(i->row());
     }
-    //lifter->upDemand(0);
-    //lifter->upDemand(1);
-    qDebug("upDemand");// << QString("star");
+    qDebug("upDemand");
 }
 
 void ControlWidget::downDemand()
@@ -149,19 +130,7 @@ void ControlWidget::downDemand()
 
 void ControlWidget::stopMove()
 {
-    /*QVector<Gcpd> cpd;
-    cpd.append(Gcpd(1,37,1));
-    gnet->sendGDatagram(10,0,30,0,32,cpd);
-    gnet->sendGDatagram(10,0,31,0,32,cpd);*/
 
-    /*GDatagram datagram(0,10,0,30,0,32);
-    datagram.appendCpd(Gcpd(1,37,1));
-    gnet->sendGDatagram(datagram);
-    datagram.addrTo = 31;
-    gnet->sendGDatagram(datagram);*/
-
-    //lifter->stop(0);
-    //lifter->stop(1);
     //lifter->stop(liftTableView->selectionModel()->currentIndex().row());
     QList<QModelIndex> list=liftTableView->selectionModel()->selectedRows();
     QList<QModelIndex>::iterator i;
@@ -217,7 +186,7 @@ void ControlWidget::goSlider(int value){
         lifter->goRaw(i->row(), hmm);
     }
 }
-
+/*
 void ControlWidget::moveTimerTimeout()
 {
     if(move3DFlag==MOVE_STOP){}
@@ -252,7 +221,7 @@ void ControlWidget::moveTimerTimeout()
     //lifter->moveDirect3d(posCursor3d);
     }
 }
-
+*/
 void ControlWidget::sendCmd(){
    CmdDialog dialog(this);
 

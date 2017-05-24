@@ -13,7 +13,10 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
 {
-    QFile c("./config.gc");//../Lift3D/config.gc./config.gc
+    QFile c("./config.gc");
+    if (!c.exists()){
+        c.setFileName("../Lift3D/config.gc");
+    }
     if (!config.load(c)) {
         QErrorMessage errorMessage;
         errorMessage.showMessage(tr("Error cofig file"));
@@ -26,17 +29,17 @@ MainWindow::MainWindow(QWidget *parent) :
         lifter3D->addLift3d(conf.addr,conf.net,conf.lZero,conf.lEnd,conf.pos);
     }
     centralWidget = new QWidget(this);
-    QHBoxLayout *mainLayout = new QHBoxLayout();
+    //QHBoxLayout *mainLayout = new QHBoxLayout();
 
 
 
-    QSplitter *hSplitter = new QSplitter(centralWidget);
-    hSplitter->setOrientation(Qt::Horizontal);
+    //QSplitter *hSplitter = new QSplitter(centralWidget);
+    //hSplitter->setOrientation(Qt::Horizontal);
     //hSplitter->addWidget(glwidget);
     //hSplitter->addWidget(controlwidget);
     //hSplitter->addWidget(joywidget);
 
-    mainLayout->addWidget(hSplitter);
+    //mainLayout->addWidget(hSplitter);
      //mainLayout->addWidget(glwidget);
      //mainLayout->addWidget(button1);
 
@@ -134,12 +137,12 @@ void MainWindow::createSimpleWindows(){
     //hSplitter->addWidget(joywidget);
 
     mainLayout->addWidget(hSplitter);
-     //mainLayout->addWidget(glwidget);
-     //mainLayout->addWidget(button1);
+
 
     centralWidget->setLayout(mainLayout);
-    centralWidget->resize(400,400);
+
     setCentralWidget(centralWidget);
+    //centralWidget->resize(800,600);
 }
 
 #ifndef QT_NO_CONTEXTMENU
@@ -180,7 +183,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
             case Qt::Key_C:
                 controlwidget->sendCmd();
                 return true;
-            case Qt::Key_6:
+            /*case Qt::Key_6:
                 joywidget->move3dFlag=Joywidget::MOVE_XP;
                 qDebug("key6");
                 return true;
@@ -199,6 +202,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
             case Qt::Key_3:
                 joywidget->move3dFlag=Joywidget::MOVE_ZM;
                 return true;
+                */
 
             }
         } else if (event->type() == QEvent::KeyRelease) {
@@ -207,13 +211,13 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
             switch (keyEvent->key()){
             case Qt::Key_W:
             case Qt::Key_S:
-            case Qt::Key_6:
+            /*case Qt::Key_6:
             case Qt::Key_4:
             case Qt::Key_8:
             case Qt::Key_2:
             case Qt::Key_9:
-            case Qt::Key_3:
-                joywidget->move3dFlag=Joywidget::MOVE_STOP;
+            case Qt::Key_3:*/
+                //joywidget->move3dFlag=Joywidget::MOVE_STOP;
                 controlwidget->stopMove();
                 return true;
             }
