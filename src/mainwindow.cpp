@@ -23,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent) :
         errorMessage.exec();
     }
     gnet = new GnetRaw();
+
     lifter3D = new Lifter3d(gnet, config.limitCubePoint0,config.limitCubePoint1,config.lifterAddr,config.lifterNet,
                             config.lifterDevType,this);
     foreach (lift3DConf conf, config.lift3DList) {
@@ -53,6 +54,7 @@ MainWindow::MainWindow(QWidget *parent) :
     createMenus();
     //createDockWindows();
     createSimpleWindows();
+    statusBar()->showMessage(QString("self IP: ")+ gnet->getSelfAddress().at(0).toString());
     installEventFilter(this);
 }
 

@@ -89,6 +89,11 @@ void GnetRaw::sendGDatagram(GDatagram &gdatagram)
                              QHostAddress::Broadcast, 7777);
 }
 
+QVector<QHostAddress> GnetRaw::getSelfAddress()
+{
+    return selfAddress;
+}
+
 GnetRaw::~GnetRaw()
 {
     udpSocket->abort();

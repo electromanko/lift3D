@@ -18,6 +18,7 @@ public:
 
     void sendGDatagram(unsigned char addrFrom, unsigned char netFrom, unsigned char addrTo, unsigned char netTo, unsigned char devType, QVector<Gcpd> &cpd);
     void sendGDatagram(GDatagram &datagram);
+    QVector<QHostAddress> getSelfAddress();
 
     ~GnetRaw();
 private:
