@@ -52,7 +52,8 @@ FORMS    += form/mainwindow.ui
 RESOURCES += \
     res/shaders.qrc \
     res/textures.qrc \
-    res/icon.qrc
+    res/icon.qrc \
+    res/config.qrc
     res/cube.png
 
 DISTFILES += \

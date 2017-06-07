@@ -21,6 +21,15 @@ MainWindow::MainWindow(QWidget *parent) :
         QErrorMessage errorMessage;
         errorMessage.showMessage(tr("Error cofig file"));
         errorMessage.exec();
+        QFile dc(":/config/config.gc");
+        if (dc.exists()){
+            errorMessage.showMessage(tr("Res not exist"));
+            errorMessage.exec();
+        }
+        if (!dc.copy("./configaa.gc")){
+            errorMessage.showMessage(tr("False write cofig file"));
+            errorMessage.exec();
+        }
     }
     gnet = new GnetRaw();
 
