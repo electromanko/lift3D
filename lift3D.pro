@@ -54,7 +54,6 @@ RESOURCES += \
     res/textures.qrc \
     res/icon.qrc \
     res/config.qrc
-    res/cube.png
 
 DISTFILES += \
     config.gc

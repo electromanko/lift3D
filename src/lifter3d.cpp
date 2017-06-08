@@ -57,6 +57,8 @@ void Lifter3d::eventNewLift(Lift *lift)
         }
     }
     */
+    getParkState(lift);
+    getHeight(lift);
 }
 
 void Lifter3d::addLift3d(int addr, int net, int lenghtZero, int lenghtEnd,const QVector3D &base)

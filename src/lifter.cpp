@@ -154,6 +154,27 @@ void Lifter::goRaw(Lift* lift, int lenght)
     }
 }
 
+void Lifter::getParkState(Lift* lift)
+{
+    if(lift !=NULL){
+        GDatagram datagram(0,selfAddr,selfNet,lift->addr, lift->net,selfDevType);
+        datagram.appendCpd(Gcpd (CMD_READ, PORT_PARK, 1));
+        gnet->sendGDatagram(datagram);
+
+    }
+}
+
+void Lifter::getHeight(Lift* lift)
+{
+    if(lift !=NULL){
+        GDatagram datagram(0,selfAddr,selfNet,lift->addr, lift->net,selfDevType);
+        datagram.appendCpd(Gcpd (CMD_READ, Lifter::PORT_POSITION, 1));
+        gnet->sendGDatagram(datagram);
+
+    }
+}
+
+
 void Lifter::sendCmd(int num, QVector<Gcpd> &cpd)
 {
     Lift* lift;

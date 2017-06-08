@@ -188,8 +188,8 @@ QByteArray GDatagram::toQByteArray()
 QString GDatagram::toString()
 {//.arg(this->date.toString())
     QString str;
-    str = QString("dt %1:sz %2:n %3:af %4:nf %5:at %6:nt %7:dt %8:")\
-            .arg(this->date.toString())\
+    str = QString("t (%1):sz %2:n %3:af %4:nf %5:at %6:nt %7:dt %8:")\
+            .arg(this->date.toString("dd HH:mm:ss"))\
             .arg(this->getSize()-1)\
             .arg(this->number)\
             .arg(this->addrFrom)\

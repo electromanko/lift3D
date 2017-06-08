@@ -1,3 +1,4 @@
+#include <iostream>
 #include <QtWidgets>
 #include <QLayout>
 #include <QPushButton>
@@ -8,28 +9,32 @@
 #include "include/glwidget.h"
 
 #include "ui_mainwindow.h"
-
+//extern Q_CORE_EXPORT int qt_ntfs_permission_lookup;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
 {
-    QFile c("./config.gc");
-    if (!c.exists()){
-        c.setFileName("../Lift3D/config.gc");
-    }
-    if (!config.load(c)) {
+    QFile c("config.gc");
+
+    if (!c.exists()) {
         QErrorMessage errorMessage;
-        errorMessage.showMessage(tr("Error cofig file"));
+        QFile dc(":/defaultConfig.gc");
+        //qDebug()<<dc.open(QFile::ReadOnly);
+        //qDebug()<<dc.errorString();
+        //qt_ntfs_permission_lookup++;
+        if (!dc.copy("config.gc")){
+            errorMessage.showMessage(tr("False write default cofig file: ")+dc.errorString());
+            errorMessage.exec();
+            c.setFileName(dc.fileName());
+        } else {
+            errorMessage.showMessage(tr("Create default cofig file"));
+            errorMessage.exec();
+        }
+    }
+    if (!config.load(c)){
+        QErrorMessage errorMessage;
+        errorMessage.showMessage(tr("Error parce cofig file"));
         errorMessage.exec();
-        QFile dc(":/config/config.gc");
-        if (dc.exists()){
-            errorMessage.showMessage(tr("Res not exist"));
-            errorMessage.exec();
-        }
-        if (!dc.copy("./configaa.gc")){
-            errorMessage.showMessage(tr("False write cofig file"));
-            errorMessage.exec();
-        }
     }
     gnet = new GnetRaw();
 
@@ -130,15 +135,17 @@ void MainWindow::createSimpleWindows(){
 
     controlwidget = new ControlWidget(lifter3D, this);
     //joywidget = new Joywidget(lifter3D, config.iconSize, config.move3dDeltaPosition, config.move3dTime, this);
-    //iowidget = new IOwidget(this);
-    //connect(gnet, SIGNAL(received(QHostAddress, GDatagram)), iowidget, SLOT(receivedDatagram(QHostAddress, GDatagram)));
-    //connect(gnet, SIGNAL(sended(QHostAddress, GDatagram)), iowidget, SLOT(sendedDatagram(QHostAddress, GDatagram)));
+    iowidget = new IOwidget(this);
+    connect(gnet, SIGNAL(received(QHostAddress, GDatagram)), iowidget, SLOT(receivedDatagram(QHostAddress, GDatagram)));
+    connect(gnet, SIGNAL(sended(QHostAddress, GDatagram)), iowidget, SLOT(sendedDatagram(QHostAddress, GDatagram)));
 
-    /*QDockWidget *dock = new QDockWidget(tr("Control"), this);
+    QDockWidget *dock = new QDockWidget(tr("IO"), this);
     //dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-    dock->setWidget(controlwidget);
+    dock->setWidget(iowidget);
     addDockWidget(Qt::RightDockWidgetArea, dock);
-    viewMenu->addAction(dock->toggleViewAction());*/
+    dock->hide();
+    viewMenu->addAction(dock->toggleViewAction());
+
     QHBoxLayout *mainLayout = new QHBoxLayout();
 
     QSplitter *hSplitter = new QSplitter(centralWidget);
@@ -154,6 +161,7 @@ void MainWindow::createSimpleWindows(){
 
     setCentralWidget(centralWidget);
     //centralWidget->resize(800,600);
+    readSettings();
 }
 
 #ifndef QT_NO_CONTEXTMENU
@@ -168,7 +176,8 @@ void MainWindow::contextMenuEvent(QContextMenuEvent *event)
 
 bool MainWindow::eventFilter(QObject *target, QEvent *event)
 {
-        if (event->type() == QEvent::KeyPress) {
+    //qDebug("EventFilter type: %d", event->type());
+        if (event->type() == QEvent::ShortcutOverride ) {//QEvent::KeyPress || event->type() == QEvent::KeyPress
             QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
             if (keyEvent->isAutoRepeat())return QObject::eventFilter(target, event);
             switch (keyEvent->key()){
@@ -202,7 +211,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
                 joywidget->move3dFlag=Joywidget::MOVE_XM;
                 return true;
             case Qt::Key_8:
-                joywidget->move3dFlag=Joywidget::MOVE_YP;
+                joywidget->move3dFlag=Joywsidget::MOVE_YP;
                 return true;
             case Qt::Key_2:
                 joywidget->move3dFlag=Joywidget::MOVE_YM;
@@ -237,3 +246,17 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
     return QObject::eventFilter(target, event);
 }
 
+void MainWindow::closeEvent(QCloseEvent *event)
+  {
+      QSettings settings("gella", "Lift3D");
+      settings.setValue("geometry", saveGeometry());
+      settings.setValue("windowState", saveState());
+      QMainWindow::closeEvent(event);
+  }
+
+void MainWindow::readSettings()
+{
+    QSettings settings("gella", "Lift3D");
+    restoreGeometry(settings.value("geometry").toByteArray());
+    restoreState(settings.value("windowState").toByteArray());
+}

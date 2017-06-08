@@ -41,6 +41,9 @@ private:
     void createDockWindows();
     void createSimpleWindows();
 
+    void closeEvent(QCloseEvent *event);
+    void readSettings();
+
     QMenu *fileMenu;
     QMenu *helpMenu;
     QMenu *viewMenu;
