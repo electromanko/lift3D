@@ -4,6 +4,8 @@
 #
 #-------------------------------------------------
 
+win32:RC_ICONS += res/icon/WinchLogo.ico
+
 QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -52,10 +54,11 @@ FORMS    += form/mainwindow.ui
 RESOURCES += \
     res/shaders.qrc \
     res/textures.qrc \
-    res/icon.qrc \
-    res/config.qrc
+    res/config.qrc \
+    res/icon.qrc
 
 DISTFILES += \
     config.gc
 
 #QMAKE_LFLAGS = -static -static-libgcc -static-libstdc++  -Wl,-enable-auto-import -Wl,-enable-runtime-pseudo-reloc
+

@@ -14,6 +14,9 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
 {
+    /*QIcon icon(":/icon/WinchLogo.ico");
+    setWindowIcon(icon);*/
+
     QFile c("config.gc");
 
     if (!c.exists()) {
@@ -23,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent) :
         //qDebug()<<dc.errorString();
         //qt_ntfs_permission_lookup++;
         if (!dc.copy("config.gc")){
-            errorMessage.showMessage(tr("False write default cofig file: ")+dc.errorString());
+            errorMessage.showMessage(tr("False write default cofig file: ")+dc.errorString()+tr(". Load defaul file"));
             errorMessage.exec();
             c.setFileName(dc.fileName());
         } else {
@@ -85,8 +88,10 @@ void MainWindow::createActions(){
     connect(actionQuit, &QAction::triggered, this, &MainWindow::close);
 
     actionAbout = new QAction(tr("&About"), this);
-    actionAbout->setShortcuts(QKeySequence::Cancel);
-    actionAbout->setStatusTip(tr("Quit from app"));
+    //actionAbout->setShortcuts(QKeySequence::Cancel);
+    actionAbout->setStatusTip(tr("About app"));
+    //createAboutMessageBox();
+    connect(actionAbout, SIGNAL(triggered()), this, SLOT(createAboutMessageBox()));
 }
 
 void MainWindow::createMenus(){
@@ -139,12 +144,12 @@ void MainWindow::createSimpleWindows(){
     connect(gnet, SIGNAL(received(QHostAddress, GDatagram)), iowidget, SLOT(receivedDatagram(QHostAddress, GDatagram)));
     connect(gnet, SIGNAL(sended(QHostAddress, GDatagram)), iowidget, SLOT(sendedDatagram(QHostAddress, GDatagram)));
 
-    QDockWidget *dock = new QDockWidget(tr("IO"), this);
+    dockIOwidget = new QDockWidget(tr("IO"), this);
     //dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-    dock->setWidget(iowidget);
-    addDockWidget(Qt::RightDockWidgetArea, dock);
-    dock->hide();
-    viewMenu->addAction(dock->toggleViewAction());
+    dockIOwidget->setWidget(iowidget);
+    addDockWidget(Qt::RightDockWidgetArea, dockIOwidget);
+    //dock->hide();
+    viewMenu->addAction(dockIOwidget->toggleViewAction());
 
     QHBoxLayout *mainLayout = new QHBoxLayout();
 
@@ -164,12 +169,18 @@ void MainWindow::createSimpleWindows(){
     readSettings();
 }
 
+void MainWindow::createAboutMessageBox(){
+    QMessageBox::about(this, tr("About"), tr("Winch control program."));
+    //QMessageBox::aboutQt(this, tr("About"));
+
+}
+
 #ifndef QT_NO_CONTEXTMENU
 void MainWindow::contextMenuEvent(QContextMenuEvent *event)
 {
     QMenu menu(this);
     menu.addAction(actionQuit);
-    menu.addAction(actionAbout);
+    //menu.addAction(actionAbout);
     menu.exec(event->globalPos());
 }
 #endif // QT_NO_CONTEXTMENU
@@ -251,6 +262,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
       QSettings settings("gella", "Lift3D");
       settings.setValue("geometry", saveGeometry());
       settings.setValue("windowState", saveState());
+      settings.setValue("dockIOwidget/hidden", dockIOwidget->isHidden());
       QMainWindow::closeEvent(event);
   }
 
@@ -259,4 +271,6 @@ void MainWindow::readSettings()
     QSettings settings("gella", "Lift3D");
     restoreGeometry(settings.value("geometry").toByteArray());
     restoreState(settings.value("windowState").toByteArray());
+    if (settings.value("dockIOwidget/hidden", true).toBool())dockIOwidget->hide();
+    else dockIOwidget->show();
 }

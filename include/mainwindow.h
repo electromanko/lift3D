@@ -41,6 +41,7 @@ private:
     void createDockWindows();
     void createSimpleWindows();
 
+
     void closeEvent(QCloseEvent *event);
     void readSettings();
 
@@ -50,6 +51,10 @@ private:
 
     QAction *actionQuit;
     QAction *actionAbout;
+
+    QDockWidget *dockIOwidget;
+public slots:
+    void createAboutMessageBox();
 
 };
 
