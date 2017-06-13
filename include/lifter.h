@@ -23,12 +23,14 @@ public:
 
     static const unsigned char PORT_FIND=1;
 
+    /* Legacy position port. Accuracy in cm */
     static const unsigned char PORT_POSITION=32;
 
     static const unsigned char PORT_DIR_UP=35;
     static const unsigned char PORT_DIR_DN=36;
     static const unsigned char PORT_STOP=37;
     static const unsigned char PORT_PARK=38;
+    /* New position port. Accuracy in mm */
     static const unsigned char PORT_POS_MM=75;
     static const unsigned char PORT_POS_RAW=76;
 

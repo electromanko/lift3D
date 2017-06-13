@@ -29,6 +29,12 @@ ControlWidget::ControlWidget (Lifter *lifter, QWidget *parent) : QWidget(parent)
     findButton = new QPushButton(tr("&Find"));
     findButton->setFocusPolicy(Qt::NoFocus);
 
+    stopButton = new QPushButton(tr("&Stop"));
+    stopButton->setFocusPolicy(Qt::NoFocus);
+
+    gotoButton = new QPushButton(tr("&Goto"));
+    gotoButton->setFocusPolicy(Qt::NoFocus);
+
     parkButton = new QPushButton(tr("&Park"));
     parkButton->setFocusPolicy(Qt::NoFocus);
 
@@ -55,7 +61,9 @@ ControlWidget::ControlWidget (Lifter *lifter, QWidget *parent) : QWidget(parent)
     mainLayout->addWidget(findButton, 1,0);
     mainLayout->addWidget(upButton, 2,0);
     mainLayout->addWidget(downButton, 3,0);
-    mainLayout->addWidget(parkButton, 4,0);
+    mainLayout->addWidget(stopButton, 4,0);
+    mainLayout->addWidget(gotoButton, 5,0);
+    mainLayout->addWidget(parkButton, 6,0);
     //mainLayout->addWidget(heightSlider,5,0);
 
 
@@ -72,6 +80,10 @@ ControlWidget::ControlWidget (Lifter *lifter, QWidget *parent) : QWidget(parent)
             this, SLOT(downDemand()));
     connect(downButton, SIGNAL(released()),
             this, SLOT(stopMove()));
+    connect(stopButton, SIGNAL(clicked()),
+            this, SLOT(stopMove()));
+    connect(gotoButton, SIGNAL(clicked()),
+                    this, SLOT(goTo()));
     connect(parkButton, SIGNAL(clicked()),
             this, SLOT(park()));
     connect(heightSlider, SIGNAL(valueChanged(int)),
@@ -165,6 +177,22 @@ void ControlWidget::goTo()
 {
     bool ok;
     int hmm = QInputDialog::getInt(this, tr("Go"),
+                                 tr("Height(mm):"), 0, 0, 100000, 1, &ok);
+    if (ok)
+    {
+        QList<QModelIndex> list=liftTableView->selectionModel()->selectedRows();
+        QList<QModelIndex>::iterator i;
+        for (i=list.begin();i!=list.end();++i){
+            lifter->goMm75(i->row(), hmm);
+        }
+        qDebug("goTo"); //<< QString("finish");
+    }
+}
+
+void ControlWidget::goToRaw()
+{
+    bool ok;
+    int hmm = QInputDialog::getInt(this, tr("Go RAW"),
                                  tr("Height(mm):"), 0, 0, 100000, 1, &ok);
     if (ok)
     {

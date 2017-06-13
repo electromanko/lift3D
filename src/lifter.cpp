@@ -92,6 +92,7 @@ void Lifter::goPark(Lift *lift)
     }
 }
 
+/* Legacy position port. Accuracy in cm */
 void Lifter::goMm(int num, int height)
 {
     Lift* lift;
@@ -109,6 +110,7 @@ void Lifter::goMm(int num, int height)
     }
 }
 
+/* New position port. Accuracy in mm */
 void Lifter::goMm75(int num, int height)
 {
     Lift* lift;

@@ -209,7 +209,8 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
                 return true;
             case Qt::Key_G:
             case Qt::Key_Return:
-                controlwidget->goTo();
+                if (keyEvent->modifiers() & Qt::ControlModifier)controlwidget->goToRaw();
+                    else controlwidget->goTo();
                 return true;
             case Qt::Key_C:
                 controlwidget->sendCmd();

@@ -28,6 +28,8 @@ public:
     QPushButton *upButton;
     QPushButton *downButton;
     QPushButton *findButton;
+    QPushButton *stopButton;
+    QPushButton *gotoButton;
     QPushButton *parkButton;
     QSlider *heightSlider;
     QTimer *moveTimer;
@@ -56,6 +58,7 @@ public slots:
     void findLift();
     void park();
     void goTo();
+    void goToRaw();
     void sendCmd();
     void goSlider(int value);
     //void moveTimerTimeout();

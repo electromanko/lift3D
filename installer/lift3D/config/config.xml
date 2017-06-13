@@ -7,4 +7,5 @@
     <!-- Directory name is used in component.xml -->
     <StartMenuDir>Gella</StartMenuDir>
     <TargetDir>@HomeDir@/Gella/Lift3D</TargetDir>
+    <Logo>WinchLogo.ico</Logo>
 </Installer>
