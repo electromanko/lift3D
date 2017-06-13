@@ -42,6 +42,7 @@ ControlWidget::ControlWidget (Lifter *lifter, QWidget *parent) : QWidget(parent)
     //heightSlider->se
 
     QGridLayout *mainLayout = new QGridLayout;
+    QGridLayout *controlLayout = new QGridLayout;
 
     liftTableModel = new LiftTable(lifter);
     liftTableView->setModel(liftTableModel);
@@ -58,12 +59,15 @@ ControlWidget::ControlWidget (Lifter *lifter, QWidget *parent) : QWidget(parent)
     connect(moveTimer, SIGNAL(timeout()), this, SLOT(moveTimerTimeout()));*/
 
     mainLayout->addWidget(liftTableView, 0,0);
-    mainLayout->addWidget(findButton, 1,0);
-    mainLayout->addWidget(upButton, 2,0);
-    mainLayout->addWidget(downButton, 3,0);
-    mainLayout->addWidget(stopButton, 4,0);
-    mainLayout->addWidget(gotoButton, 5,0);
-    mainLayout->addWidget(parkButton, 6,0);
+    mainLayout->addLayout(controlLayout, 1,0);
+        controlLayout->addWidget(parkButton, 0,0);
+        controlLayout->addWidget(gotoButton, 1,0);
+        controlLayout->addWidget(findButton, 2,0);
+
+        controlLayout->addWidget(upButton, 0,1);
+        controlLayout->addWidget(downButton, 1,1);
+        controlLayout->addWidget(stopButton, 2,1);
+
     //mainLayout->addWidget(heightSlider,5,0);
 
 
