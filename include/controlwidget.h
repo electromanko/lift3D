@@ -12,6 +12,7 @@
 #include <QTimer>
 #include <QLabel>
 
+#include "qmqtt.h"
 class ControlWidget : public QWidget
 {
     Q_OBJECT
@@ -34,6 +35,7 @@ public:
     QSlider *heightSlider;
     QTimer *moveTimer;
 
+    //QMQTT::Client *client;
     bool timerStartFlag;
 
     //bool eventFilter(QObject *target, QEvent *event);
@@ -62,6 +64,11 @@ public slots:
     void sendCmd();
     void goSlider(int value);
     //void moveTimerTimeout();
+    //void onConnected();
+
+signals:
+    void statusBarMessage(QString msg);
+
 };
 
 #endif // PARAMWIDGET_H

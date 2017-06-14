@@ -7,9 +7,27 @@
 #include <QShortcut>
 #include <QInputDialog>
 
+#include <include/iomqtt.h>
+
+
+/*const QString EXAMPLE_TOPIC = "qmqtt/exampletopic";
+quint16 _number;*/
 
 ControlWidget::ControlWidget (Lifter *lifter, QWidget *parent) : QWidget(parent)
 {
+
+    /*_number=0;
+    client = new QMQTT::Client(QHostAddress("192.168.24.142"), 1883);
+    connect(client, SIGNAL(connected()), this, SLOT(onConnected()));
+    client->setClientId("RomaQT");
+    client->setUsername("");
+    client->setPassword("");
+    client->connectToHost();*/
+    IOmqtt mqttExample(QHostAddress("192.168.24.145"),1883);
+    //mqttExample.setHostName("liftmaster");
+    //mqttExample.setHost(QHostAddress("192.168.24.142"));
+    mqttExample.connectToHost();
+
     move3DFlag=MOVE_STOP;
     //posCursor3d.setX(500);
     //posCursor3d.setY(500);
@@ -20,23 +38,29 @@ ControlWidget::ControlWidget (Lifter *lifter, QWidget *parent) : QWidget(parent)
 
     upButton = new QPushButton(tr("&Up"));
     upButton->setFocusPolicy(Qt::NoFocus);
+    upButton->setStatusTip(tr("Up key: w"));
     //upButton->setShortcut(QKeySequence(Qt::Key_8));
 
     downButton = new QPushButton(tr("&Down"));
     downButton->setFocusPolicy(Qt::NoFocus);
+    downButton->setStatusTip(tr("Down key: s"));
     //downButton->setShortcut(QKeySequence(Qt::Key_2));
 
     findButton = new QPushButton(tr("&Find"));
     findButton->setFocusPolicy(Qt::NoFocus);
+    findButton->setStatusTip(tr("Find key: f"));
 
     stopButton = new QPushButton(tr("&Stop"));
+    stopButton->setStatusTip(tr("Stop ALL key: Space"));
     stopButton->setFocusPolicy(Qt::NoFocus);
 
     gotoButton = new QPushButton(tr("&Goto"));
     gotoButton->setFocusPolicy(Qt::NoFocus);
+    gotoButton->setStatusTip(tr("Goto key: g | Enter"));
 
     parkButton = new QPushButton(tr("&Park"));
     parkButton->setFocusPolicy(Qt::NoFocus);
+    parkButton->setStatusTip(tr("Park key: p"));
 
     heightSlider = new QSlider(Qt::Horizontal);
     //heightSlider->se
@@ -333,5 +357,13 @@ void ControlWidget::adjustLiftTableSize()
                   + liftTableView->columnWidth(3) + liftTableView->columnWidth(4) + liftTableView->columnWidth(5));
     liftTableView->setGeometry(rect);
 }
+/*
+void ControlWidget::onConnected(){
+    client->subscribe(EXAMPLE_TOPIC, 0);
+    qDebug("Connected mqtt");
+    QMQTT::Message message(_number, EXAMPLE_TOPIC,
+    QString("Number is %1").arg(_number).toUtf8());
+    client->publish(message);
 
-
+}
+*/

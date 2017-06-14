@@ -73,6 +73,7 @@ MainWindow::MainWindow(QWidget *parent) :
     createSimpleWindows();
     statusBar()->showMessage(QString("self IP: ")+ gnet->getSelfAddress().at(0).toString());
     installEventFilter(this);
+    controlwidget->findLift();
 }
 
 MainWindow::~MainWindow()
@@ -133,6 +134,7 @@ void MainWindow::createDockWindows(){
     dock->setWidget(iowidget);
     addDockWidget(Qt::RightDockWidgetArea, dock);
     viewMenu->addAction(dock->toggleViewAction());
+
 }
 
 void MainWindow::createSimpleWindows(){
@@ -167,6 +169,7 @@ void MainWindow::createSimpleWindows(){
     setCentralWidget(centralWidget);
     //centralWidget->resize(800,600);
     readSettings();
+
 }
 
 void MainWindow::createAboutMessageBox(){

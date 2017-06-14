@@ -13,7 +13,6 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = lift3D
 TEMPLATE = app
 
-
 SOURCES += src/main.cpp\
            src/mainwindow.cpp\
            src/glwidget.cpp\
@@ -30,7 +29,8 @@ SOURCES += src/main.cpp\
     src/joywidget.cpp \
     src/controlwidget.cpp \
     src/liftconfig.cpp \
-    src/iowidget.cpp
+    src/iowidget.cpp \
+    src/iomqtt.cpp
 
 HEADERS  += include/mainwindow.h\
             include/glwidget.h\
@@ -47,7 +47,8 @@ HEADERS  += include/mainwindow.h\
     include/joywidget.h \
     include/controlwidget.h \
     include/liftconfig.h \
-    include/iowidget.h
+    include/iowidget.h \
+    include/iomqtt.h
 
 FORMS    += form/mainwindow.ui
 
@@ -62,3 +63,10 @@ DISTFILES += \
 
 #QMAKE_LFLAGS = -static -static-libgcc -static-libstdc++  -Wl,-enable-auto-import -Wl,-enable-runtime-pseudo-reloc
 
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../qmqtt/build-qmqtt-Desktop_Qt_5_6_2_MinGW_32bit-Debug/lib/ -lqmqtt
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../qmqtt/build-qmqtt-Desktop_Qt_5_6_2_MinGW_32bit-Debug/lib/ -lqmqttd
+else:unix: LIBS += -L$$PWD/../../qmqtt/build-qmqtt-Desktop_Qt_5_6_2_MinGW_32bit-Debug/lib/ -lqmqtt
+
+INCLUDEPATH += $$PWD/../../qmqtt/qmqtt-master/src/mqtt
+DEPENDPATH += $$PWD/../../qmqtt/qmqtt-master/src/mqtt
