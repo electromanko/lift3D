@@ -17,7 +17,6 @@ IOmqtt::IOmqtt(const QHostAddress& host,
    setPassword("");
 }
 
-
 void IOmqtt::onConnected()
 {
    subscribe(EXAMPLE_TOPIC, 0);

@@ -10,6 +10,8 @@
 #include <QFile>
 #include <QMainWindow>
 
+#include <include/iomqtt.h>
+
 
 class MainWindow;
 
@@ -36,6 +38,8 @@ protected:
     #endif // QT_NO_CONTEXTMENU
 private:
 
+    IOmqtt *mqttExample;
+
     void createActions();
     void createMenus();
     void createDockWindows();
@@ -46,15 +50,18 @@ private:
     void readSettings();
 
     QMenu *fileMenu;
-    QMenu *helpMenu;
     QMenu *viewMenu;
+    QMenu *toolsMenu;
+    QMenu *helpMenu;
 
     QAction *actionQuit;
     QAction *actionAbout;
+    QAction *actionSettings;
 
     QDockWidget *dockIOwidget;
 public slots:
     void createAboutMessageBox();
+    void createSettingsDialog();
 
 };
 

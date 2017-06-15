@@ -30,7 +30,8 @@ SOURCES += src/main.cpp\
     src/controlwidget.cpp \
     src/liftconfig.cpp \
     src/iowidget.cpp \
-    src/iomqtt.cpp
+    src/iomqtt.cpp \
+    src/settingsdialog.cpp
 
 HEADERS  += include/mainwindow.h\
             include/glwidget.h\
@@ -48,7 +49,8 @@ HEADERS  += include/mainwindow.h\
     include/controlwidget.h \
     include/liftconfig.h \
     include/iowidget.h \
-    include/iomqtt.h
+    include/iomqtt.h \
+    include/settingsdialog.h
 
 FORMS    += form/mainwindow.ui
 

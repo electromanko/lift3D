@@ -7,7 +7,7 @@
 #include <QShortcut>
 #include <QInputDialog>
 
-#include <include/iomqtt.h>
+
 
 
 /*const QString EXAMPLE_TOPIC = "qmqtt/exampletopic";
@@ -23,10 +23,10 @@ ControlWidget::ControlWidget (Lifter *lifter, QWidget *parent) : QWidget(parent)
     client->setUsername("");
     client->setPassword("");
     client->connectToHost();*/
-    IOmqtt mqttExample(QHostAddress("192.168.24.145"),1883);
+    /*IOmqtt mqttExample(QHostAddress("192.168.24.145"),1883);
     //mqttExample.setHostName("liftmaster");
     //mqttExample.setHost(QHostAddress("192.168.24.142"));
-    mqttExample.connectToHost();
+    mqttExample.connectToHost();*/
 
     move3DFlag=MOVE_STOP;
     //posCursor3d.setX(500);

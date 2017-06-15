@@ -5,6 +5,7 @@
 #include <QHBoxLayout>
 #include <QSplitter>
 #include <include/joywidget.h>
+#include <include/settingsdialog.h>
 #include "include/mainwindow.h"
 #include "include/glwidget.h"
 
@@ -16,6 +17,16 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     /*QIcon icon(":/icon/WinchLogo.ico");
     setWindowIcon(icon);*/
+
+    //mqttExample = new IOmqtt(QHostAddress("192.168.24.142"),1883);
+    //mqttExample = new IOmqtt(QString("liftmaster"),1883);
+
+    mqttExample = new IOmqtt();
+    mqttExample->setHostName(QString("liftmaster"));
+
+    //mqttExample.setHostName("liftmaster");
+    //mqttExample.setHost(QHostAddress("192.168.24.142"));
+    mqttExample->connectToHost();
 
     QFile c("config.gc");
 
@@ -93,6 +104,10 @@ void MainWindow::createActions(){
     actionAbout->setStatusTip(tr("About app"));
     //createAboutMessageBox();
     connect(actionAbout, SIGNAL(triggered()), this, SLOT(createAboutMessageBox()));
+
+    actionSettings = new QAction(tr("&Settings"), this);
+    actionSettings->setStatusTip(tr("Settings"));
+    connect(actionSettings, SIGNAL(triggered()), this, SLOT(createSettingsDialog()));
 }
 
 void MainWindow::createMenus(){
@@ -101,6 +116,9 @@ void MainWindow::createMenus(){
         fileMenu->addAction(actionQuit);
 
         viewMenu = menuBar()->addMenu(tr("&View"));
+
+        toolsMenu = menuBar()->addMenu(tr("&Tools"));
+        toolsMenu->addAction(actionSettings);
 
         fileMenu = menuBar()->addMenu(tr("&Help"));
         fileMenu->addSeparator();
@@ -176,6 +194,14 @@ void MainWindow::createAboutMessageBox(){
     QMessageBox::about(this, tr("About"), tr("Winch control program."));
     //QMessageBox::aboutQt(this, tr("About"));
 
+}
+
+void MainWindow::createSettingsDialog(){
+    SettingsDialog settings(this);
+
+    if (settings.exec() == QDialog::Accepted ) {
+
+       }
 }
 
 #ifndef QT_NO_CONTEXTMENU
