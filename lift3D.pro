@@ -31,7 +31,8 @@ SOURCES += src/main.cpp\
     src/liftconfig.cpp \
     src/iowidget.cpp \
     src/iomqtt.cpp \
-    src/settingsdialog.cpp
+    src/settingsdialog.cpp \
+    src/gdatagram.cpp
 
 HEADERS  += include/mainwindow.h\
             include/glwidget.h\
@@ -50,7 +51,11 @@ HEADERS  += include/mainwindow.h\
     include/liftconfig.h \
     include/iowidget.h \
     include/iomqtt.h \
-    include/settingsdialog.h
+    include/settingsdialog.h \
+    include/gdatagram.h
+
+TRANSLATIONS += translations/lift3D_ru.ts
+#TRANSLATIONS += translations/lift3D_en.ts
 
 FORMS    += form/mainwindow.ui
 

@@ -18,6 +18,12 @@ public:
     QVector3D limitCubePoint1;
     QVector<lift3DConf> lift3DList;
 
+    //Connections
+    /*int udpPortConnection;
+    QString mqttHostnameConnection;
+    int mqttPortConnection;*/
+
+
     explicit LiftConfig(QObject *parent = 0);
     bool load(QFile &configFile);
 signals:
