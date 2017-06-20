@@ -15,18 +15,21 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
 {
+    QSettings settings("gella", "Lift3D");
+    QString protocolType = settings.value("connections/type","udp").toString();
+
     /*QIcon icon(":/icon/WinchLogo.ico");
     setWindowIcon(icon);*/
 
     //mqttExample = new IOmqtt(QHostAddress("192.168.24.142"),1883);
     //mqttExample = new IOmqtt(QString("liftmaster"),1883);
 
-    mqttExample = new IOmqtt();
+    /*mqttExample = new IOmqtt();
     mqttExample->setHostName(QString("liftmaster"));
 
     //mqttExample.setHostName("liftmaster");
     //mqttExample.setHost(QHostAddress("192.168.24.142"));
-    mqttExample->connectToHost();
+    mqttExample->connectToHost();*/
 
     QFile c("config.gc");
 
@@ -51,6 +54,8 @@ MainWindow::MainWindow(QWidget *parent) :
         errorMessage.exec();
     }
     gnet = new GnetRaw();
+    if (!protocolType.compare("udp")) gnet->connect_udp(settings.value("connections/udp/port","udp").toInt());
+    else if (!protocolType.compare("mqtt")) gnet->connect_mqtt(settings.value("connections/mqtt/hostname","liftmaster").toString(), settings.value("connections/mqtt/port","1883").toInt());
 
     lifter3D = new Lifter3d(gnet, config.limitCubePoint0,config.limitCubePoint1,config.lifterAddr,config.lifterNet,
                             config.lifterDevType,this);
@@ -197,10 +202,20 @@ void MainWindow::createAboutMessageBox(){
 }
 
 void MainWindow::createSettingsDialog(){
-    SettingsDialog settings(this);
+    QSettings settings("gella", "Lift3D");
+    SettingsDialog settingsDialog(this);
 
-    if (settings.exec() == QDialog::Accepted ) {
-
+    if (settingsDialog.exec() == QDialog::Accepted ) {
+            QString protocolType = settings.value("connections/type","udp").toString();
+            gnet->disconnect();
+            if (!protocolType.compare("mqtt")){ //gnet->getConnectionType()==GnetRaw::UDP_CONNECTION &&
+                gnet->connect_mqtt(settings.value("connections/mqtt/hostname","liftmaster").toString(), settings.value("connections/mqtt/port","1883").toInt());
+            }
+            else if (!protocolType.compare("udp")){ //gnet->getConnectionType()==GnetRaw::MQTT_CONNECTION &&
+                gnet->disconnect();
+                gnet->connect_udp(settings.value("connections/udp/port","udp").toInt());
+            }
+            controlwidget->findLift();
        }
 }
 
